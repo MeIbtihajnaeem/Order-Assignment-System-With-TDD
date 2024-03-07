@@ -40,10 +40,14 @@ public class CategoryController {
 			if (existingCategory != null) {
 				categoryRepository.delete(category.getCategoryId());
 				categoryView.categoryRemoved(category);
+				return;
 			}
-			categoryView.showErrorCategoryNotFound("No Category exists with id " + category.getCategoryId(), category);
+			categoryView.showErrorCategoryNotFound("No Category exists with id " + category.getCategoryId(),
+					existingCategory);
+		} else {
+			categoryView.showError("Category cannot be null", null);
+
 		}
-		categoryView.showError("Category cannot be null", null);
 
 	}
 

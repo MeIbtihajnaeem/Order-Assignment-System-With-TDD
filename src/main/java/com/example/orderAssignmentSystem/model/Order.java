@@ -6,6 +6,11 @@ public class Order {
 	private String orderDescription;
 	private Worker worker;
 
+	public Order() {
+
+	}
+	
+
 	public Order(String orderId, Category category, String orderDescription) {
 		super();
 		this.orderId = orderId;

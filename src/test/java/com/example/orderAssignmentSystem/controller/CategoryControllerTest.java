@@ -126,7 +126,7 @@ public class CategoryControllerTest {
 		categoryController.deleteCategory(category);
 		InOrder inOrder = inOrder(categoryRepository, categoryView);
 		inOrder.verify(categoryView).showErrorCategoryNotFound("No Category exists with id " + category.getCategoryId(),
-				category);
+				null);
 		verifyNoMoreInteractions(ignoreStubs(categoryRepository));
 	}
 
