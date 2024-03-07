@@ -7,9 +7,11 @@ import com.example.orderAssignmentSystem.model.Category;
 public interface CategoryRepository {
 	public List<Category> findAll();
 
-	public Category findById(int id);
+	public Category findById(String id);
+
+	public Category findByName(String categoryName);
 
 	public void save(Category category);
 
-	public void delete(int id);
+	public void delete(String id);
 }

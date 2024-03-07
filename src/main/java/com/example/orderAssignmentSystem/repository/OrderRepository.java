@@ -7,9 +7,9 @@ import com.example.orderAssignmentSystem.model.Order;
 public interface OrderRepository {
 	public List<Order> findAll();
 
-	public Order findById(int id);
+	public Order findById(String id);
 
 	public void save(Order order);
 
-	public void delete(int id);
+	public void delete(String id);
 }

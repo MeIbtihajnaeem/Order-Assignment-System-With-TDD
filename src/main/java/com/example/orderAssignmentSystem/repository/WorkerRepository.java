@@ -7,9 +7,9 @@ import com.example.orderAssignmentSystem.model.Worker;
 public interface WorkerRepository {
 	public List<Worker> findAll();
 
-	public Worker findById(int id);
+	public Worker findById(String id);
 
 	public void save(Worker worker);
 
-	public void delete(int id);
+	public void delete(String id);
 }

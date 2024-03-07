@@ -4,17 +4,17 @@ import java.util.List;
 
 public class Worker {
 
-	private int workerId;
+	private String workerId;
 	private String workerName;
 	private List<Order> orders;
 
-	public Worker(int workerId, String workerName) {
+	public Worker(String workerId, String workerName) {
 		super();
 		this.workerId = workerId;
 		this.workerName = workerName;
 	}
 
-	public Worker(int workerId, String workerName, List<Order> orders) {
+	public Worker(String workerId, String workerName, List<Order> orders) {
 		super();
 		this.workerId = workerId;
 		this.workerName = workerName;
@@ -25,7 +25,7 @@ public class Worker {
 		return orders;
 	}
 
-	public int getWorkerId() {
+	public String getWorkerId() {
 		return workerId;
 	}
 
