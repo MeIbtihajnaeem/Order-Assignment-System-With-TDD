@@ -1,0 +1,121 @@
+2024-03-08 16:36:53.796 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - Worker cannot be null
+2024-03-08 16:36:53.836 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:36:53.837 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - Worker deleted sucessfully since no orders found
+2024-03-08 16:36:53.851 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:36:53.854 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - This worker has 1 orders cannot delete worker with assigned orders
+2024-03-08 16:36:53.855 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - No worker Exists with id 1
+2024-03-08 16:36:53.857 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:36:53.858 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - Worker deleted sucessfully since no orders found
+2024-03-08 16:36:53.868 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - No worker Exists with id 1
+2024-03-08 16:36:53.871 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:36:53.872 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - Therefore new worker with this id cannot be created!
+2024-03-08 16:36:53.877 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 not found
+2024-03-08 16:36:53.877 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 created!
+2024-03-08 16:36:53.879 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - Worker cannot be null
+2024-03-08 16:39:33.559 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - Worker cannot be null
+2024-03-08 16:39:33.599 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:39:33.599 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - Worker deleted sucessfully since no orders found
+2024-03-08 16:39:33.608 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:39:33.609 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - This worker has 1 orders cannot delete worker with assigned orders
+2024-03-08 16:39:33.609 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - No worker Exists with id 1
+2024-03-08 16:39:33.612 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:39:33.613 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - Worker deleted sucessfully since no orders found
+2024-03-08 16:39:33.626 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - No worker Exists with id 1
+2024-03-08 16:39:33.630 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 found
+2024-03-08 16:39:33.631 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - Therefore new worker with this id cannot be created!
+2024-03-08 16:39:33.635 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 not found
+2024-03-08 16:39:33.636 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - Worker with 1 created!
+2024-03-08 16:39:33.638 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - Worker cannot be null
+2024-03-08 16:44:31.275 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:28 - Worker cannot be null
+2024-03-08 16:44:31.315 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - Worker with 1 found
+2024-03-08 16:44:31.316 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:59 - Worker deleted sucessfully since no orders found
+2024-03-08 16:44:31.327 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - Worker with 1 found
+2024-03-08 16:44:31.329 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:68 - This worker has 1 orders cannot delete worker with assigned orders
+2024-03-08 16:44:31.330 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:77 - No worker Exists with id 1
+2024-03-08 16:44:31.332 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - Worker with 1 found
+2024-03-08 16:44:31.333 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:64 - Worker deleted sucessfully since no orders found
+2024-03-08 16:44:31.339 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:77 - No worker Exists with id 1
+2024-03-08 16:44:31.342 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:34 - Worker with 1 found
+2024-03-08 16:44:31.343 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:35 - Therefore new worker with this id cannot be created!
+2024-03-08 16:44:31.347 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:39 - Worker with 1 not found
+2024-03-08 16:44:31.347 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:42 - Worker with 1 created!
+2024-03-08 16:44:31.349 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:50 - Worker cannot be null
+2024-03-08 16:45:06.969 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:28 - Worker cannot be null
+2024-03-08 16:45:07.003 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - Worker with 1 found
+2024-03-08 16:45:07.004 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:59 - Worker deleted sucessfully since no orders found
+2024-03-08 16:45:07.014 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - Worker with 1 found
+2024-03-08 16:45:07.016 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:68 - This worker has 1 orders cannot delete worker with assigned orders
+2024-03-08 16:45:07.017 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:77 - No worker Exists with id 1
+2024-03-08 16:45:07.019 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - Worker with 1 found
+2024-03-08 16:45:07.020 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:64 - Worker deleted sucessfully since no orders found
+2024-03-08 16:45:07.026 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:77 - No worker Exists with id 1
+2024-03-08 16:45:07.029 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:34 - Worker with 1 found
+2024-03-08 16:45:07.029 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:35 - Therefore new worker with this id cannot be created!
+2024-03-08 16:45:07.034 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:39 - Worker with 1 not found
+2024-03-08 16:45:07.034 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:42 - Worker with 1 created!
+2024-03-08 16:45:07.036 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:50 - Worker cannot be null
+2024-03-08 16:50:11.110 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:28 - ERROR: Worker cannot be null (at createNewWorker method)
+2024-03-08 16:50:11.147 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - INFO: Worker with 1 found (at deleteWorker method)
+2024-03-08 16:50:11.147 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:59 - DEBUG: Worker deleted sucessfully since no orders found (at deleteWorker method)
+2024-03-08 16:50:11.157 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - INFO: Worker with 1 found (at deleteWorker method)
+2024-03-08 16:50:11.159 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:68 - ERROR: This worker has 1 orders cannot delete worker with assigned orders  (at deleteWorker method)
+2024-03-08 16:50:11.160 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:79 - ERROR: No worker Exists with id (at deleteWorker method)1
+2024-03-08 16:50:11.162 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:55 - INFO: Worker with 1 found (at deleteWorker method)
+2024-03-08 16:50:11.162 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:64 - DEBUG: Worker deleted sucessfully since no orders found (at deleteWorker method)
+2024-03-08 16:50:11.168 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:79 - ERROR: No worker Exists with id (at deleteWorker method)1
+2024-03-08 16:50:11.170 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:34 - INFO: Worker with 1 found  (at createNewWorker method)
+2024-03-08 16:50:11.171 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:35 - ERROR: Therefore new worker with this id cannot be created!  (at createNewWorker method)
+2024-03-08 16:50:11.176 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:39 - INFO: Worker with 1 not found  (at createNewWorker method)
+2024-03-08 16:50:11.177 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.createNewWorker:42 - DEBUG: Worker with 1 created!  (at createNewWorker method)
+2024-03-08 16:50:11.179 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - WorkerController.deleteWorker:50 - ERROR: Worker cannot be null (at deleteWorker method)
+2024-03-08 17:01:53.623 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:117 - DEBUG: Order is sucessfully modified! (at modifyOrderStatus method)
+2024-03-08 17:01:53.640 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:33 - ERROR: Order cannot be null (at createNewOrder method)
+2024-03-08 17:01:53.642 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:110 - INFO: No modification occore since order status is not changed (at modifyOrderStatus method)
+2024-03-08 17:01:53.644 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:70 - ERROR: Order cannot be null (at deleteOrder method)
+2024-03-08 17:01:53.646 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:104 - ERROR: No order exist with id 1 (at modifyOrderStatus method)
+2024-03-08 17:01:53.651 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:97 - ERROR: Status cannot be null (at modifyOrderStatus method)
+2024-03-08 17:01:53.653 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:58 - ERROR: Worker not found (at createNewOrder method)
+2024-03-08 17:01:53.660 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:92 - ERROR: Order cannot be null (at modifyOrderStatus method)
+2024-03-08 17:01:53.661 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:62 - ERROR: WorkerId cannot be null (at createNewOrder method)
+2024-03-08 17:01:53.666 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:49 - INFO: Worker with 1 found  (at createNewOrder method)
+2024-03-08 17:01:53.667 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:52 - INFO: OrderStatus is set to Pending (at createNewOrder method)
+2024-03-08 17:01:53.667 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:55 - INFO: Order is sucessfully created! (at createNewOrder method)
+2024-03-08 17:01:53.670 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:76 - INFO: Order with 1 found  (at deleteOrder method)
+2024-03-08 17:01:53.671 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:79 - DEBUG: Order is sucessfully deleted! (at deleteOrder method)
+2024-03-08 17:01:53.673 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:84 - ERROR: No order exist with id1 (at deleteOrder method)
+2024-03-08 17:01:53.677 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:39 - INFO: Order with 1 found  (at createNewOrder method)
+2024-03-08 17:01:53.677 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:40 - ERROR: Therefore new order with this id cannot be created!  (at createNewOrder method)
+2024-03-08 17:02:36.636 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:117 - DEBUG: Order is sucessfully modified! (at modifyOrderStatus method)
+2024-03-08 17:02:36.653 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:33 - ERROR: Order cannot be null (at createNewOrder method)
+2024-03-08 17:02:36.655 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:110 - INFO: No modification occore since order status is not changed (at modifyOrderStatus method)
+2024-03-08 17:02:36.657 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:70 - ERROR: Order cannot be null (at deleteOrder method)
+2024-03-08 17:02:36.660 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:104 - ERROR: No order exist with id 1 (at modifyOrderStatus method)
+2024-03-08 17:02:36.664 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:97 - ERROR: Status cannot be null (at modifyOrderStatus method)
+2024-03-08 17:02:36.667 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:58 - ERROR: Worker not found (at createNewOrder method)
+2024-03-08 17:02:36.674 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:92 - ERROR: Order cannot be null (at modifyOrderStatus method)
+2024-03-08 17:02:36.677 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:62 - ERROR: WorkerId cannot be null (at createNewOrder method)
+2024-03-08 17:02:36.681 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:49 - INFO: Worker with 1 found  (at createNewOrder method)
+2024-03-08 17:02:36.681 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:52 - INFO: OrderStatus is set to Pending (at createNewOrder method)
+2024-03-08 17:02:36.682 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:55 - INFO: Order is sucessfully created! (at createNewOrder method)
+2024-03-08 17:02:36.686 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:76 - INFO: Order with 1 found  (at deleteOrder method)
+2024-03-08 17:02:36.686 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:79 - DEBUG: Order is sucessfully deleted! (at deleteOrder method)
+2024-03-08 17:02:36.689 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:84 - ERROR: No order exist with id1 (at deleteOrder method)
+2024-03-08 17:02:36.691 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:39 - INFO: Order with 1 found  (at createNewOrder method)
+2024-03-08 17:02:36.692 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:40 - ERROR: Therefore new order with this id cannot be created!  (at createNewOrder method)
+2024-03-08 17:03:27.616 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:117 - DEBUG: Order is sucessfully modified! (at modifyOrderStatus method)
+2024-03-08 17:03:27.631 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:33 - ERROR: Order cannot be null (at createNewOrder method)
+2024-03-08 17:03:27.633 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:110 - INFO: No modification occore since order status is not changed (at modifyOrderStatus method)
+2024-03-08 17:03:27.635 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:70 - ERROR: Order cannot be null (at deleteOrder method)
+2024-03-08 17:03:27.637 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:104 - ERROR: No order exist with id 1 (at modifyOrderStatus method)
+2024-03-08 17:03:27.642 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:97 - ERROR: Status cannot be null (at modifyOrderStatus method)
+2024-03-08 17:03:27.645 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:58 - ERROR: Worker not found (at createNewOrder method)
+2024-03-08 17:03:27.651 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.modifyOrderStatus:92 - ERROR: Order cannot be null (at modifyOrderStatus method)
+2024-03-08 17:03:27.653 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:62 - ERROR: WorkerId cannot be null (at createNewOrder method)
+2024-03-08 17:03:27.657 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:49 - INFO: Worker with 1 found  (at createNewOrder method)
+2024-03-08 17:03:27.657 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:52 - INFO: OrderStatus is set to Pending (at createNewOrder method)
+2024-03-08 17:03:27.659 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:55 - INFO: Order is sucessfully created! (at createNewOrder method)
+2024-03-08 17:03:27.662 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:76 - INFO: Order with 1 found  (at deleteOrder method)
+2024-03-08 17:03:27.663 [main] DEBUG com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:79 - DEBUG: Order is sucessfully deleted! (at deleteOrder method)
+2024-03-08 17:03:27.665 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.deleteOrder:84 - ERROR: No order exist with id1 (at deleteOrder method)
+2024-03-08 17:03:27.668 [main] INFO  com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:39 - INFO: Order with 1 found  (at createNewOrder method)
+2024-03-08 17:03:27.668 [main] ERROR com.example.orderAssignmentSystem.controller.WorkerController - OrderController.createNewOrder:40 - ERROR: Therefore new order with this id cannot be created!  (at createNewOrder method)
