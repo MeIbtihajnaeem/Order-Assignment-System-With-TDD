@@ -1,26 +1,27 @@
 package com.example.orderAssignmentSystem.model;
 
-import com.example.orderAssignmentSystem.model.enums.OrderStatus;
+import com.example.orderAssignmentSystem.model.enums.CategoryEnum;
+import com.example.orderAssignmentSystem.model.enums.OrderStatusEnum;
 
 public class Order {
 	private String orderId;
-	private Category category;
+	private CategoryEnum category;
 	private String orderDescription;
 	private String workerId;
-	private OrderStatus orderStatus;
+	private OrderStatusEnum orderStatus;
 
 	public Order() {
 
 	}
 
-	public Order(String orderId, Category category, String orderDescription) {
+	public Order(String orderId, CategoryEnum category, String orderDescription) {
 		super();
 		this.orderId = orderId;
 		this.category = category;
 		this.orderDescription = orderDescription;
 	}
 
-	public Order(String orderId, Category category, String orderDescription, String workerId) {
+	public Order(String orderId, CategoryEnum category, String orderDescription, String workerId) {
 		super();
 		this.orderId = orderId;
 		this.category = category;
@@ -28,7 +29,8 @@ public class Order {
 		this.workerId = workerId;
 	}
 
-	public Order(String orderId, Category category, String orderDescription, String workerId, OrderStatus orderStatus) {
+	public Order(String orderId, CategoryEnum category, String orderDescription, String workerId,
+			OrderStatusEnum orderStatus) {
 		super();
 		this.orderId = orderId;
 		this.category = category;
@@ -45,11 +47,11 @@ public class Order {
 		return orderId;
 	}
 
-	public OrderStatus getOrderStatus() {
+	public OrderStatusEnum getOrderStatus() {
 		return orderStatus;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
+	public void setOrderStatus(OrderStatusEnum orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 

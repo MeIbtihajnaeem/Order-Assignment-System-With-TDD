@@ -2,7 +2,7 @@ package com.example.orderAssignmentSystem.controller;
 
 import com.example.orderAssignmentSystem.model.Order;
 import com.example.orderAssignmentSystem.model.Worker;
-import com.example.orderAssignmentSystem.model.enums.OrderStatus;
+import com.example.orderAssignmentSystem.model.enums.OrderStatusEnum;
 import com.example.orderAssignmentSystem.repository.OrderRepository;
 import com.example.orderAssignmentSystem.repository.WorkerRepository;
 import com.example.orderAssignmentSystem.view.OrderView;
@@ -37,7 +37,7 @@ public class OrderController {
 		if (workerId != null) {
 			Worker worker = workerRepository.findById(workerId);
 			if (worker != null) {
-				order.setOrderStatus(OrderStatus.PENDING);
+				order.setOrderStatus(OrderStatusEnum.PENDING);
 				orderRepository.save(order);
 
 				orderView.orderAdded(order);
@@ -64,7 +64,7 @@ public class OrderController {
 
 	}
 
-	public void modifyOrderStatus(Order order, OrderStatus status) {
+	public void modifyOrderStatus(Order order, OrderStatusEnum status) {
 		if (order == null) {
 			throw new NullPointerException("Order cannot be null");
 		}

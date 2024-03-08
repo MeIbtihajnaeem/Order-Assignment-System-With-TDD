@@ -1,6 +1,6 @@
 package com.example.orderAssignmentSystem.model.enums;
 
-public enum OrderStatus {
+public enum OrderStatusEnum {
 	PENDING, COMPLETED, CANCELED
 
 }

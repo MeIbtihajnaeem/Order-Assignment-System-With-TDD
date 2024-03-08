@@ -22,11 +22,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import com.example.orderAssignmentSystem.model.Category;
 //import com.example.orderAssignmentSystem.model.Category;
 import com.example.orderAssignmentSystem.model.Order;
 import com.example.orderAssignmentSystem.model.Worker;
-import com.example.orderAssignmentSystem.model.enums.OrderStatus;
+import com.example.orderAssignmentSystem.model.enums.CategoryEnum;
+import com.example.orderAssignmentSystem.model.enums.OrderStatusEnum;
 import com.example.orderAssignmentSystem.repository.OrderRepository;
 import com.example.orderAssignmentSystem.repository.WorkerRepository;
 import com.example.orderAssignmentSystem.view.OrderView;
@@ -93,8 +93,7 @@ public class OrderControllerTest {
 
 	private static final String DEFAULT_ORDER_ID = "1";
 	private static final String DEFAULT_WORKER_ID = "1";
-	private static final String DEFAULT_CATEGORY_ID = "1";
-	private static final Category DEFAULT_CATEGORY = new Category(DEFAULT_CATEGORY_ID, "Plumber");
+	private static final CategoryEnum DEFAULT_CATEGORY = CategoryEnum.PLUMBER;
 	private static final String DEFAULT_ORDER_DESCRIPTION = "New Pipe installation";
 
 	@Spy
@@ -111,7 +110,7 @@ public class OrderControllerTest {
 		orderController.createNewOrder(newOrderObject);
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository, newOrderObject);
 		inOrder.verify(workerRepository).findById(DEFAULT_WORKER_ID);
-		inOrder.verify(newOrderObject).setOrderStatus(OrderStatus.PENDING);
+		inOrder.verify(newOrderObject).setOrderStatus(OrderStatusEnum.PENDING);
 		inOrder.verify(orderRepository).save(newOrderObject);
 		inOrder.verify(orderView).orderAdded(newOrderObject);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
@@ -141,8 +140,7 @@ public class OrderControllerTest {
 	@Test
 	public void testCreateNewOrderWhenOrderIdAlreadyExists() {
 		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION);
-		Order existingOrder = new Order(DEFAULT_ORDER_ID, new Category(DEFAULT_CATEGORY_ID, "Electrician"),
-				"New wire installation");
+		Order existingOrder = new Order(DEFAULT_ORDER_ID, CategoryEnum.ELECTRICIAN, "New wire installation");
 		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(existingOrder);
 		orderController.createNewOrder(order);
 		InOrder inOrder = inOrder(orderRepository, orderView);
@@ -186,7 +184,7 @@ public class OrderControllerTest {
 	@Test
 	public void testModifyOrderStatusWhenNull() {
 		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, DEFAULT_ORDER_ID,
-				OrderStatus.PENDING);
+				OrderStatusEnum.PENDING);
 		try {
 			orderController.modifyOrderStatus(order, null);
 			fail("Expected an NullPointerException to be thrown ");
@@ -211,14 +209,14 @@ public class OrderControllerTest {
 
 	@Spy
 	private Order orderForStatusChange = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION,
-			DEFAULT_ORDER_ID, OrderStatus.PENDING);
+			DEFAULT_ORDER_ID, OrderStatusEnum.PENDING);
 
 	@Test
 	public void testModifyOrderStatusWhenChanged() {
 		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(orderForStatusChange);
-		orderController.modifyOrderStatus(orderForStatusChange, OrderStatus.COMPLETED);
+		orderController.modifyOrderStatus(orderForStatusChange, OrderStatusEnum.COMPLETED);
 		InOrder inOrder = inOrder(orderRepository, orderView, orderForStatusChange);
-		inOrder.verify(orderForStatusChange).setOrderStatus(OrderStatus.COMPLETED);
+		inOrder.verify(orderForStatusChange).setOrderStatus(OrderStatusEnum.COMPLETED);
 		inOrder.verify(orderRepository).update(orderForStatusChange);
 		inOrder.verify(orderView).orderModified(orderForStatusChange);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
@@ -227,9 +225,9 @@ public class OrderControllerTest {
 	@Test
 	public void testModifyOrderStatusWhenAlreadyCompleted() {
 		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, DEFAULT_ORDER_ID,
-				OrderStatus.COMPLETED);
+				OrderStatusEnum.COMPLETED);
 		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(order);
-		orderController.modifyOrderStatus(order, OrderStatus.COMPLETED);
+		orderController.modifyOrderStatus(order, OrderStatusEnum.COMPLETED);
 		verify(orderRepository).findById(DEFAULT_ORDER_ID);
 		verifyNoInteractions(orderView);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
@@ -239,9 +237,9 @@ public class OrderControllerTest {
 	@Test
 	public void testModifyOrderStatusWhenOrderIdNotFound() {
 		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, DEFAULT_ORDER_ID,
-				OrderStatus.COMPLETED);
+				OrderStatusEnum.COMPLETED);
 		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(null);
-		orderController.modifyOrderStatus(order, OrderStatus.COMPLETED);
+		orderController.modifyOrderStatus(order, OrderStatusEnum.COMPLETED);
 		verify(orderRepository).findById(DEFAULT_ORDER_ID);
 		verify(orderView).showErrorOrderNotFound("No order exist with id 1", null);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
