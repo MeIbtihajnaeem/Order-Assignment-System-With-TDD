@@ -1,6 +1,8 @@
 package com.example.orderAssignmentSystem.controller;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
@@ -47,14 +49,20 @@ public class WorkerControllerTest {
 		closeable.close();
 	}
 
+	private static final String DEFAULT_WORKER_NAME = "Alic";
+
+	private static final String DEFAULT_WORKER_ID = "1";
+
+	private static final int INITIAL_INDEX = 0;
+
 	@Test
 	public void testAllworkerWhenOrderListNotEmpty() {
-		List<Order> order = asList(new Order());
-		List<Worker> workers = asList(new Worker("1", "Alic", order));
-		when(workerRepository.findAll()).thenReturn(workers);
+		List<Order> allOrdersList = asList(new Order());
+		List<Worker> allWorkersLists = asList(new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, allOrdersList));
+		when(workerRepository.findAll()).thenReturn(allWorkersLists);
 		workerController.allWorkers();
 		verify(workerView).showAllWorkers(argThat(workerList -> {
-			if (workers.get(0).getOrders().isEmpty()) {
+			if (allWorkersLists.get(INITIAL_INDEX).getOrders().isEmpty()) {
 				return false;
 			}
 			return true;
@@ -63,11 +71,12 @@ public class WorkerControllerTest {
 
 	@Test
 	public void testAllWorkersWhenOrderListEmpty() {
-		List<Worker> workers = asList(new Worker("1", "Alic", Collections.emptyList()));
-		when(workerRepository.findAll()).thenReturn(workers);
+		List<Worker> allWorkersLists = asList(
+				new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, Collections.emptyList()));
+		when(workerRepository.findAll()).thenReturn(allWorkersLists);
 		workerController.allWorkers();
 		verify(workerView).showAllWorkers(argThat(workerList -> {
-			if (workers.get(0).getOrders().isEmpty()) {
+			if (allWorkersLists.get(INITIAL_INDEX).getOrders().isEmpty()) {
 				return true;
 			}
 			return false;
@@ -76,11 +85,11 @@ public class WorkerControllerTest {
 
 	@Test
 	public void testAllWorkersWhenOrderNull() {
-		List<Worker> workers = asList(new Worker("1", "Alic", null));
-		when(workerRepository.findAll()).thenReturn(workers);
+		List<Worker> allWorkersLists = asList(new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, null));
+		when(workerRepository.findAll()).thenReturn(allWorkersLists);
 		workerController.allWorkers();
 		verify(workerView).showAllWorkers(argThat(workerList -> {
-			if (workers.get(0).getOrders() == null) {
+			if (allWorkersLists.get(INITIAL_INDEX).getOrders() == null) {
 				return true;
 			}
 			return false;
@@ -103,85 +112,98 @@ public class WorkerControllerTest {
 
 	@Test
 	public void testCreateNewWorkerWhenWorkerIsNull() {
-		workerController.createNewWorker(null);
+		try {
+			workerController.createNewWorker(null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Worker cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(workerRepository);
-		verify(workerView).showError("Worker cannot be null ", null);
+		verifyNoMoreInteractions(workerView);
 	}
+
+	private static final Worker WORKER_WITH_No_ORDERS = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME);
 
 	@Test
 	public void testCreateNewWorkerWhenWorkerIdNotAlreadyExists() {
-		Worker worker = new Worker("1", "Alic");
-		when(workerRepository.findById("1")).thenReturn(null);
-		workerController.createNewWorker(worker);
+		Worker newWorker = WORKER_WITH_No_ORDERS;
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(null);
+		workerController.createNewWorker(newWorker);
 		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).save(worker);
-		inOrder.verify(workerView).workerAdded(worker);
+		inOrder.verify(workerRepository).save(newWorker);
+		inOrder.verify(workerView).workerAdded(newWorker);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 
 	@Test
 	public void testCreateNewWorkerWhenWorkerIdAlreadyExists() {
-		Worker worker = new Worker("1", "Alic");
-		Worker existingWorker = new Worker("1", "Bob");
-		when(workerRepository.findById("1")).thenReturn(existingWorker);
-		workerController.createNewWorker(worker);
+		Worker newWorker = WORKER_WITH_No_ORDERS;
+		Worker existingWorker = new Worker(DEFAULT_WORKER_ID, "Bob");
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(existingWorker);
+		workerController.createNewWorker(newWorker);
 		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerView).showError("Worker with id " + worker.getWorkerId() + " Already exists",
+		inOrder.verify(workerView).showError("Worker with id " + newWorker.getWorkerId() + " Already exists",
 				existingWorker);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 
 	@Test
 	public void testDeleteWorkerWhenWorkerIsNull() {
-		workerController.deleteWorker(null);
+		try {
+			workerController.deleteWorker(null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Worker cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(workerRepository);
-		verify(workerView).showError("Worker cannot be null ", null);
-
+		verifyNoMoreInteractions(workerView);
 	}
 
 	@Test
 	public void testDeleteWorkerWhenWorkerAlreadyExistsWithOrders() {
-		List<Order> order = asList(new Order());
-		Worker worker = new Worker("1", "Alic", order);
-		when(workerRepository.findById("1")).thenReturn(worker);
-		workerController.deleteWorker(worker);
+		List<Order> ordersList = asList(new Order());
+		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, ordersList);
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
+		workerController.deleteWorker(workerToBeDeleted);
 		InOrder inOrder = inOrder(workerRepository, workerView);
 		inOrder.verify(workerView).showError(
-				"This worker has " + order.size() + " orders cannot delete worker with assigned orders", worker);
+				"This worker has " + ordersList.size() + " orders cannot delete worker with assigned orders",
+				workerToBeDeleted);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 
 	}
 
 	@Test
 	public void testDeleteWorkerWhenWorkerAlreadyExistsEmptyOrders() {
-		Worker worker = new Worker("1", "Alic", Collections.emptyList());
-		when(workerRepository.findById("1")).thenReturn(worker);
-		workerController.deleteWorker(worker);
+		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, Collections.emptyList());
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
+		workerController.deleteWorker(workerToBeDeleted);
 		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).delete(worker.getWorkerId());
-		inOrder.verify(workerView).workerRemoved(worker);
+		inOrder.verify(workerRepository).delete(workerToBeDeleted.getWorkerId());
+		inOrder.verify(workerView).workerRemoved(workerToBeDeleted);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 
 	}
 
 	@Test
 	public void testDeleteWorkerWhenWorkerAlreadyExistsNullOrders() {
-		Worker worker = new Worker("1", "Alic", null);
-		when(workerRepository.findById("1")).thenReturn(worker);
-		workerController.deleteWorker(worker);
+		Worker workerToBeDeleted = WORKER_WITH_No_ORDERS;
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
+		workerController.deleteWorker(workerToBeDeleted);
 		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).delete(worker.getWorkerId());
-		inOrder.verify(workerView).workerRemoved(worker);
+		inOrder.verify(workerRepository).delete(workerToBeDeleted.getWorkerId());
+		inOrder.verify(workerView).workerRemoved(workerToBeDeleted);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 
 	@Test
 	public void testDeleteWorkerWhenWorkerNotExists() {
-		Worker worker = new Worker("1", "Alic");
-		when(workerRepository.findById("1")).thenReturn(null);
-		workerController.deleteWorker(worker);
+		Worker workerToBeDeleted = WORKER_WITH_No_ORDERS;
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(null);
+		workerController.deleteWorker(workerToBeDeleted);
 		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerView).showErrorWorkerNotFound("No worker Exists with id " + worker.getWorkerId(), null);
+		inOrder.verify(workerView)
+				.showErrorWorkerNotFound("No worker Exists with id " + workerToBeDeleted.getWorkerId(), null);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 
 	}

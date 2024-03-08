@@ -19,35 +19,38 @@ public class CategoryController {
 	}
 
 	public void newCategory(Category category) {
-		if (category != null) {
-			Category existingCategory = categoryRepository.findByName(category.getCategoryName());
-			if (existingCategory != null) {
-				categoryView.showError("Already existing category with name" + category.getCategoryName(),
-						existingCategory);
-				return;
-			}
+		if (category == null) {
+			throw new NullPointerException("Category cannot be null");
 
-			categoryRepository.save(category);
-			categoryView.categoryAdded(category);
 		}
-		categoryView.showError("Category cannot be null", null);
+
+		Category existingCategory = categoryRepository.findByName(category.getCategoryName());
+		if (existingCategory != null) {
+			categoryView.showError("Already existing category with name" + category.getCategoryName(),
+					existingCategory);
+			return;
+		}
+
+		categoryRepository.save(category);
+		categoryView.categoryAdded(category);
+
+//		categoryView.showError("Category cannot be null", null);
 
 	}
 
 	public void deleteCategory(Category category) {
-		if (category != null) {
-			Category existingCategory = categoryRepository.findById(category.getCategoryId());
-			if (existingCategory != null) {
-				categoryRepository.delete(category.getCategoryId());
-				categoryView.categoryRemoved(category);
-				return;
-			}
-			categoryView.showErrorCategoryNotFound("No Category exists with id " + category.getCategoryId(),
-					existingCategory);
-		} else {
-			categoryView.showError("Category cannot be null", null);
+		if (category == null) {
+			throw new NullPointerException("Category cannot be null");
 
 		}
+		Category existingCategory = categoryRepository.findById(category.getCategoryId());
+		if (existingCategory != null) {
+			categoryRepository.delete(category.getCategoryId());
+			categoryView.categoryRemoved(category);
+			return;
+		}
+		categoryView.showErrorCategoryNotFound("No Category exists with id " + category.getCategoryId(),
+				existingCategory);
 
 	}
 

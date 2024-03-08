@@ -1,6 +1,8 @@
 package com.example.orderAssignmentSystem.controller;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -21,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
 import com.example.orderAssignmentSystem.model.Category;
+//import com.example.orderAssignmentSystem.model.Category;
 import com.example.orderAssignmentSystem.model.Order;
 import com.example.orderAssignmentSystem.model.Worker;
 import com.example.orderAssignmentSystem.model.enums.OrderStatus;
@@ -78,25 +81,36 @@ public class OrderControllerTest {
 
 	@Test
 	public void testCreateNewOrderWhenNullOrder() {
-		orderController.createNewOrder(null);
+		try {
+			orderController.createNewOrder(null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Order cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(orderRepository);
-		verify(orderView).showError("Order cannot be null", null);
-
+		verifyNoMoreInteractions(orderView);
 	}
 
+	private static final String DEFAULT_ORDER_ID = "1";
+	private static final String DEFAULT_WORKER_ID = "1";
+	private static final String DEFAULT_CATEGORY_ID = "1";
+	private static final Category DEFAULT_CATEGORY = new Category(DEFAULT_CATEGORY_ID, "Plumber");
+	private static final String DEFAULT_ORDER_DESCRIPTION = "New Pipe installation";
+
 	@Spy
-	private Order newOrderObject = new Order("1", new Category("1", "Plumber"), "New Pipe installation", "1");
+	private Order newOrderObject = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION,
+			DEFAULT_WORKER_ID);
 
 	@Test
 	public void testCreateNewOrderWhenOrderIdNotAlreadyExistsButWorkerExists() {
 
-		when(orderRepository.findById("1")).thenReturn(null);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(null);
 
-		when(workerRepository.findById("1")).thenReturn(new Worker("1", "Alic"));
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(new Worker(DEFAULT_WORKER_ID, "Alic"));
 
 		orderController.createNewOrder(newOrderObject);
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository, newOrderObject);
-		inOrder.verify(workerRepository).findById("1");
+		inOrder.verify(workerRepository).findById(DEFAULT_WORKER_ID);
 		inOrder.verify(newOrderObject).setOrderStatus(OrderStatus.PENDING);
 		inOrder.verify(orderRepository).save(newOrderObject);
 		inOrder.verify(orderView).orderAdded(newOrderObject);
@@ -105,9 +119,9 @@ public class OrderControllerTest {
 
 	@Test
 	public void testCreateNewOrderWhenOrderIdNotAlreadyExistsButNoWorkerExists() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation", "1");
-		when(orderRepository.findById("1")).thenReturn(null);
-		when(workerRepository.findById("1")).thenReturn(null);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, DEFAULT_WORKER_ID);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(null);
+		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(null);
 		orderController.createNewOrder(order);
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
 		inOrder.verify(orderView).showError("Worker not found", null);
@@ -116,8 +130,8 @@ public class OrderControllerTest {
 
 	@Test
 	public void testCreateNewOrderWhenOrderIdNotAlreadyExistsButIsNull() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation", null);
-		when(orderRepository.findById("1")).thenReturn(null);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, null);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(null);
 		orderController.createNewOrder(order);
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
 		inOrder.verify(orderView).showError("Cannot create Order without Worker", null);
@@ -126,9 +140,10 @@ public class OrderControllerTest {
 
 	@Test
 	public void testCreateNewOrderWhenOrderIdAlreadyExists() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation");
-		Order existingOrder = new Order("1", new Category("1", "Electrician"), "New wire installation");
-		when(orderRepository.findById("1")).thenReturn(existingOrder);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION);
+		Order existingOrder = new Order(DEFAULT_ORDER_ID, new Category(DEFAULT_CATEGORY_ID, "Electrician"),
+				"New wire installation");
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(existingOrder);
 		orderController.createNewOrder(order);
 		InOrder inOrder = inOrder(orderRepository, orderView);
 		inOrder.verify(orderView).showError("Order with id " + order.getOrderId() + " already exists", existingOrder);
@@ -137,16 +152,20 @@ public class OrderControllerTest {
 
 	@Test
 	public void testDeleteOrderWhenNullOrder() {
-		orderController.deleteOrder(null);
+		try {
+			orderController.deleteOrder(null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Order cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(orderRepository);
-		verify(orderView).showError("Order cannot be null ", null);
-
+		verifyNoMoreInteractions(orderView);
 	}
 
 	@Test
 	public void testDeleteOrderWhenOrderNotAlreadyExists() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation");
-		when(orderRepository.findById("1")).thenReturn(null);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(null);
 		orderController.deleteOrder(order);
 		InOrder inOrder = inOrder(orderRepository, orderView);
 		inOrder.verify(orderView).showErrorOrderNotFound("No order exist with id " + order.getOrderId(), null);
@@ -155,8 +174,8 @@ public class OrderControllerTest {
 
 	@Test
 	public void testDeleteOrderWhenOrderAlreadyExists() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation");
-		when(orderRepository.findById("1")).thenReturn(order);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(order);
 		orderController.deleteOrder(order);
 		InOrder inOrder = inOrder(orderRepository, orderView);
 		inOrder.verify(orderRepository).delete(order.getOrderId());
@@ -166,26 +185,37 @@ public class OrderControllerTest {
 
 	@Test
 	public void testModifyOrderStatusWhenNull() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation", "1", OrderStatus.PENDING);
-		orderController.modifyOrderStatus(order, null);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, DEFAULT_ORDER_ID,
+				OrderStatus.PENDING);
+		try {
+			orderController.modifyOrderStatus(order, null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Status cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(orderRepository);
-		verify(orderView).showError("Status cannot be null ", null);
+		verifyNoMoreInteractions(orderView);
 	}
 
 	@Test
 	public void testModifyOrderWhenStatusAndOrderNull() {
-		orderController.modifyOrderStatus(null, null);
+		try {
+			orderController.modifyOrderStatus(null, null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Order cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(orderRepository);
-		verify(orderView).showError("Order cannot be null ", null);
+		verifyNoMoreInteractions(orderView);
 	}
 
 	@Spy
-	private Order orderForStatusChange = new Order("1", new Category("1", "Plumber"), "New Pipe installation", "1",
-			OrderStatus.PENDING);
+	private Order orderForStatusChange = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION,
+			DEFAULT_ORDER_ID, OrderStatus.PENDING);
 
 	@Test
 	public void testModifyOrderStatusWhenChanged() {
-		when(orderRepository.findById("1")).thenReturn(orderForStatusChange);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(orderForStatusChange);
 		orderController.modifyOrderStatus(orderForStatusChange, OrderStatus.COMPLETED);
 		InOrder inOrder = inOrder(orderRepository, orderView, orderForStatusChange);
 		inOrder.verify(orderForStatusChange).setOrderStatus(OrderStatus.COMPLETED);
@@ -196,10 +226,11 @@ public class OrderControllerTest {
 
 	@Test
 	public void testModifyOrderStatusWhenAlreadyCompleted() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation", "1", OrderStatus.COMPLETED);
-		when(orderRepository.findById("1")).thenReturn(order);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, DEFAULT_ORDER_ID,
+				OrderStatus.COMPLETED);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(order);
 		orderController.modifyOrderStatus(order, OrderStatus.COMPLETED);
-		verify(orderRepository).findById("1");
+		verify(orderRepository).findById(DEFAULT_ORDER_ID);
 		verifyNoInteractions(orderView);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
 
@@ -207,10 +238,11 @@ public class OrderControllerTest {
 
 	@Test
 	public void testModifyOrderStatusWhenOrderIdNotFound() {
-		Order order = new Order("1", new Category("1", "Plumber"), "New Pipe installation", "1", OrderStatus.COMPLETED);
-		when(orderRepository.findById("1")).thenReturn(null);
+		Order order = new Order(DEFAULT_ORDER_ID, DEFAULT_CATEGORY, DEFAULT_ORDER_DESCRIPTION, DEFAULT_ORDER_ID,
+				OrderStatus.COMPLETED);
+		when(orderRepository.findById(DEFAULT_ORDER_ID)).thenReturn(null);
 		orderController.modifyOrderStatus(order, OrderStatus.COMPLETED);
-		verify(orderRepository).findById("1");
+		verify(orderRepository).findById(DEFAULT_ORDER_ID);
 		verify(orderView).showErrorOrderNotFound("No order exist with id 1", null);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
 	}

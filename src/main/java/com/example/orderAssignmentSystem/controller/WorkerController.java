@@ -20,41 +20,42 @@ public class WorkerController {
 	}
 
 	public void createNewWorker(Worker worker) {
-		if (worker != null) {
-			Worker existingWorker = workerRepository.findById(worker.getWorkerId());
-			if (existingWorker != null) {
-				workerView.showError("Worker with id " + worker.getWorkerId() + " Already exists", existingWorker);
-				return;
-			}
-			workerRepository.save(worker);
-			workerView.workerAdded(worker);
+		if (worker == null) {
+			throw new NullPointerException("Worker cannot be null");
 		}
-		workerView.showError("Worker cannot be null ", worker);
+		Worker existingWorker = workerRepository.findById(worker.getWorkerId());
+		if (existingWorker != null) {
+			workerView.showError("Worker with id " + worker.getWorkerId() + " Already exists", existingWorker);
+			return;
+		}
+		workerRepository.save(worker);
+		workerView.workerAdded(worker);
 
 	}
 
 	public void deleteWorker(Worker worker) {
-		if (worker != null) {
-			Worker existingWorker = workerRepository.findById(worker.getWorkerId());
-			if (existingWorker != null) {
-
-				if (existingWorker.getOrders() == null) {
-					workerRepository.delete(worker.getWorkerId());
-					workerView.workerRemoved(worker);
-					return;
-				} else if (existingWorker.getOrders().isEmpty()) {
-					workerRepository.delete(worker.getWorkerId());
-					workerView.workerRemoved(worker);
-					return;
-				} else {
-					workerView.showError("This worker has " + existingWorker.getOrders().size()
-							+ " orders cannot delete worker with assigned orders", worker);
-
-				}
-			}
-			workerView.showErrorWorkerNotFound("No worker Exists with id " + worker.getWorkerId(), existingWorker);
+		if (worker == null) {
+			throw new NullPointerException("Worker cannot be null");
 		}
-		workerView.showError("Worker cannot be null ", worker);
+		Worker existingWorker = workerRepository.findById(worker.getWorkerId());
+		if (existingWorker != null) {
+
+			if (existingWorker.getOrders() == null) {
+				workerRepository.delete(worker.getWorkerId());
+				workerView.workerRemoved(worker);
+				return;
+			} else if (existingWorker.getOrders().isEmpty()) {
+				workerRepository.delete(worker.getWorkerId());
+				workerView.workerRemoved(worker);
+				return;
+			} else {
+				workerView.showError("This worker has " + existingWorker.getOrders().size()
+						+ " orders cannot delete worker with assigned orders", worker);
+
+			}
+		}
+		workerView.showErrorWorkerNotFound("No worker Exists with id " + worker.getWorkerId(), existingWorker);
+
 	}
 
 }

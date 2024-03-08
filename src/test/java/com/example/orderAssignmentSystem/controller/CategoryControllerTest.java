@@ -1,6 +1,8 @@
 package com.example.orderAssignmentSystem.controller;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -70,14 +72,21 @@ public class CategoryControllerTest {
 
 	@Test
 	public void testNewCategoryNullCategory() {
-		categoryController.newCategory(null);
+		try {
+			categoryController.newCategory(null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Category cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(categoryRepository);
-		verify(categoryView).showError("Category cannot be null", null);
+		verifyNoMoreInteractions(categoryView);
 	}
+
+	private static final Category DEFAULT_CATEGORY = new Category("1", "Plumber");
 
 	@Test
 	public void testNewCategoryWhenCategoryNotAlreadyExist() {
-		Category category = new Category("1", "Plumber");
+		Category category = DEFAULT_CATEGORY;
 		when(categoryRepository.findByName("Plumber")).thenReturn(null);
 		categoryController.newCategory(category);
 		InOrder inOrder = inOrder(categoryRepository, categoryView);
@@ -89,7 +98,7 @@ public class CategoryControllerTest {
 
 	@Test
 	public void testNewCategoryWhenCategoryAlreadyExist() {
-		Category categoryToAdd = new Category("1", "Plumber");
+		Category categoryToAdd = DEFAULT_CATEGORY;
 		Category existingCategory = new Category("2", "Plumber");
 		when(categoryRepository.findByName("Plumber")).thenReturn(existingCategory);
 		categoryController.newCategory(categoryToAdd);
@@ -101,15 +110,20 @@ public class CategoryControllerTest {
 
 	@Test
 	public void testDeleteCategoryWhenNullCategory() {
-		categoryController.deleteCategory(null);
+		try {
+			categoryController.deleteCategory(null);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Category cannot be null", e.getMessage());
+		}
 		verifyNoMoreInteractions(categoryRepository);
-		verify(categoryView).showError("Category cannot be null", null);
+		verifyNoMoreInteractions(categoryView);
 
 	}
 
 	@Test
 	public void testDeleteCategoryWhenCategoryExist() {
-		Category category = new Category("1", "Plumber");
+		Category category = DEFAULT_CATEGORY;
 		when(categoryRepository.findById("1")).thenReturn(category);
 		categoryController.deleteCategory(category);
 		InOrder inOrder = inOrder(categoryRepository, categoryView);
@@ -121,7 +135,7 @@ public class CategoryControllerTest {
 
 	@Test
 	public void testDeleteCategoryWhenCategoryNotExist() {
-		Category category = new Category("1", "Plumber");
+		Category category = DEFAULT_CATEGORY;
 		when(categoryRepository.findById("1")).thenReturn(null);
 		categoryController.deleteCategory(category);
 		InOrder inOrder = inOrder(categoryRepository, categoryView);
