@@ -24,21 +24,6 @@ public class Category {
 		return categoryName;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(categoryName);
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Category other = (Category) obj;
-		return Objects.equals(categoryName.toLowerCase(), other.categoryName.toLowerCase());
-	}
 
 }

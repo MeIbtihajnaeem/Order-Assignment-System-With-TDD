@@ -9,6 +9,8 @@ public interface OrderRepository {
 
 	public Order findById(String id);
 
+	public void update(Order order);
+
 	public void save(Order order);
 
 	public void delete(String id);

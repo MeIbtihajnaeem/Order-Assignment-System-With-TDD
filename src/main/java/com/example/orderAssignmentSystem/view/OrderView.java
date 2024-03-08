@@ -10,6 +10,8 @@ public interface OrderView {
 	void showError(String message, Order order);
 
 	void orderAdded(Order order);
+	
+	void orderModified(Order order);
 
 	void orderRemoved(Order order);
 

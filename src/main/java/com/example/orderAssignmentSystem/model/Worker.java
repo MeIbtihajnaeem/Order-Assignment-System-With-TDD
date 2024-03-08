@@ -29,8 +29,4 @@ public class Worker {
 		return workerId;
 	}
 
-	public String getWorkerName() {
-		return workerName;
-	}
-
 }
