@@ -5,7 +5,7 @@
 	<groupId>com.example.orderAssignmentSystem</groupId>
 	<artifactId>com.example.orderAssignmentSystem</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
+	<url>https://github.com/MeIbtihajnaeem/Order-Assignment-System-With-TDD</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,6 +55,12 @@
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>3.5.0</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>3.3.2</version>
+				</plugin>
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
