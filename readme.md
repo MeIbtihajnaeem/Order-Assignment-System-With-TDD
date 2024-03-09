@@ -1,0 +1,2 @@
+[![JAVA CI with Maven in Linux](https://github.com/MeIbtihajnaeem/Order-Assignment-System-With-TDD/actions/workflows/maven.yml/badge.svg)](https://github.com/MeIbtihajnaeem/Order-Assignment-System-With-TDD/actions/workflows/maven.yml)
+[![Coverage Status](https://coveralls.io/repos/github/MeIbtihajnaeem/Order-Assignment-System-With-TDD/badge.svg)](https://coveralls.io/github/MeIbtihajnaeem/Order-Assignment-System-With-TDD)
