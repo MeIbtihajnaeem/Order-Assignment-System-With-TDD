@@ -5,6 +5,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env: 
+      workdir: ./
     strategy:
       matrix:
         include:
@@ -26,9 +28,12 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven
       run: >
-        mvn -f ./pom.xml 
-        clean verify ${{matrix.additional-maven-args}}
-        surefire-report:report-only site:site -DgenerateReport=false
+        mvn verify ${{matrix.additional-maven-args}}
+      working-directory: ${{ env.workdir }}
+    - name: Generate JUnit Report
+      run: >
+        mvn surefire-report:report-only site:site -DgenerateReport=false
+      working-directory: ${{env.workdir}}
       env:
         COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
       if: ${{ always () }}
