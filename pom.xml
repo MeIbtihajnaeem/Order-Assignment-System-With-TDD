@@ -14,7 +14,6 @@
 		<junit.version>4.13.1</junit.version>
 		<mockito.version>3.7.0</mockito.version>
 		<log4j.version>2.13.0</log4j.version>
-		<coveralls.version>4.3.0</coveralls.version>
 
 	</properties>
 
@@ -93,7 +92,7 @@
 				<plugin>
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
-					<version>${coveralls.version}}</version>
+					<version>4.3.0</version>
 					<dependencies>
 						<!-- This is required when using JDK 9 or higher since
 						javax.xml.bind has been removed from the JDK -->
