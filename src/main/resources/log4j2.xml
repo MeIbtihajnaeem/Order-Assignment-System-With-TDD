@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
-	<Appenders>
-		<Console name="ConsoleAppender" target="SYSTEM_OUT">
-			<PatternLayout
-				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-		</Console>
-		<File name="FileAppender"
-			fileName="application-${date:yyyyMMdd}.log" immediateFlush="false"
-			append="true">
-			<PatternLayout
-				pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %class{1}.%M:%L - %msg%n" />
-		</File>
-	</Appenders>
-	<Loggers>
-		<Root level="debug">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Root>
-	</Loggers>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <File name="FileAppender"
+              fileName="application-${date:yyyyMMdd}.log" immediateFlush="false"
+              append="true">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %class{1}.%M:%L - %msg%n" />
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="FileAppender" />
+        </Root>
+    </Loggers>
 </Configuration>
