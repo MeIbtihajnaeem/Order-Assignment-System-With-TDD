@@ -96,9 +96,13 @@
 			</build>
 		</profile>
 		<profile>
-			<id>mutation-testing</id>
+			<id>mutation-testing-with-coverage</id>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+					</plugin>
 					<plugin>
 						<groupId>org.pitest</groupId>
 						<artifactId>pitest-maven</artifactId>
