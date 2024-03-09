@@ -48,4 +48,10 @@ jobs:
       with:
           name: pit-report-jdk-${{ matrix.java }}
           path: '**/target/pit-reports'
+    - name: ArchiveLogs
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+         name: log-files
+         path: './*.log'
           
