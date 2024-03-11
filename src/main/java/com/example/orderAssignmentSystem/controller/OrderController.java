@@ -3,7 +3,7 @@ package com.example.orderAssignmentSystem.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.example.orderAssignmentSystem.model.Order;
+import com.example.orderAssignmentSystem.model.CustomerOrder;
 import com.example.orderAssignmentSystem.model.Worker;
 import com.example.orderAssignmentSystem.model.enums.OrderStatusEnum;
 import com.example.orderAssignmentSystem.repository.OrderRepository;
@@ -24,70 +24,75 @@ public class OrderController {
 		this.workerRepository = workerRepository;
 	}
 
-	public void allCategories() {
+	public void allOrders() {
 		orderView.showAllOrders(orderRepository.findAll());
 	}
 
-	public void createNewOrder(Order order) {
+	public CustomerOrder createNewOrder(CustomerOrder order) {
 		if (order == null) {
 			LOGGER.error("ERROR: Order cannot be null (at createNewOrder method)");
 
 			throw new NullPointerException("Order cannot be null");
 		}
-		Order existingOrder = orderRepository.findById(order.getOrderId());
-		if (existingOrder != null) {
-			LOGGER.info("INFO: Order with " + order.getOrderId() + " found  (at createNewOrder method)");
-			LOGGER.error("ERROR: Therefore new order with this id cannot be created!  (at createNewOrder method)");
-			orderView.showError("Order with id " + order.getOrderId() + " already exists", existingOrder);
-			return;
-		}
+		if (order.getOrderId() != null) {
 
-		String workerId = order.getWorkerId();
-		if (workerId != null) {
-			Worker worker = workerRepository.findById(workerId);
-			if (worker != null) {
-				LOGGER.info("INFO: Worker with " + worker.getWorkerId() + " found  (at createNewOrder method)");
+			CustomerOrder existingOrder = orderRepository.findById(order.getOrderId());
+			if (existingOrder != null) {
+				LOGGER.info("INFO: Order with " + order.getOrderId() + " found  (at createNewOrder method)");
+				LOGGER.error("ERROR: Therefore new order with this id cannot be created!  (at createNewOrder method)");
+				orderView.showError("Order with id " + order.getOrderId() + " already exists", existingOrder);
+				return null;
+			}
+		}
+		Worker worker = order.getWorker();
+		if (worker != null) {
+			Worker existingWorker = workerRepository.findById(worker.getWorkerId());
+			if (existingWorker != null) {
+				LOGGER.info("INFO: Worker with " + existingWorker.getWorkerId() + " found  (at createNewOrder method)");
 
 				order.setOrderStatus(OrderStatusEnum.PENDING);
 				LOGGER.info("INFO: OrderStatus is set to Pending (at createNewOrder method)");
 
-				orderRepository.save(order);
+				CustomerOrder newOrder = orderRepository.save(order);
 				LOGGER.info("INFO: Order is sucessfully created! (at createNewOrder method)");
-				orderView.orderAdded(order);
+				orderView.orderAdded(newOrder);
+				return newOrder;
 			} else {
 				LOGGER.error("ERROR: Worker not found (at createNewOrder method)");
 				orderView.showError("Worker not found", null);
+				return null;
 			}
 		} else {
 			LOGGER.error("ERROR: WorkerId cannot be null (at createNewOrder method)");
 			orderView.showError("Cannot create Order without Worker", null);
+			return null;
 		}
 
 	}
 
-	public void deleteOrder(Order order) {
-		if (order == null) {
+	public void deleteOrder(Long orderId) {
+		if (orderId == null) {
 			LOGGER.error("ERROR: Order cannot be null (at deleteOrder method)");
 
 			throw new NullPointerException("Order cannot be null");
 		}
-		Order existingOrder = orderRepository.findById(order.getOrderId());
+		CustomerOrder existingOrder = orderRepository.findById(orderId);
 		if (existingOrder != null) {
-			LOGGER.info("INFO: Order with " + order.getOrderId() + " found  (at deleteOrder method)");
+			LOGGER.info("INFO: Order with " + existingOrder.getOrderId() + " found  (at deleteOrder method)");
 
-			orderRepository.delete(order.getOrderId());
+			orderRepository.delete(existingOrder);
 			LOGGER.debug("DEBUG: Order is sucessfully deleted! (at deleteOrder method)");
 
-			orderView.orderRemoved(order);
+			orderView.orderRemoved(existingOrder);
 			return;
 		}
-		LOGGER.error("ERROR: No order exist with id" + order.getOrderId() + " (at deleteOrder method)");
+		LOGGER.error("ERROR: No order exist with id" + orderId + " (at deleteOrder method)");
 
-		orderView.showErrorOrderNotFound("No order exist with id " + order.getOrderId(), existingOrder);
+		orderView.showErrorOrderNotFound("No order exist with id " + orderId, existingOrder);
 
 	}
 
-	public void modifyOrderStatus(Order order, OrderStatusEnum status) {
+	public void modifyOrderStatus(CustomerOrder order, OrderStatusEnum status) {
 		if (order == null) {
 			LOGGER.error("ERROR: Order cannot be null (at modifyOrderStatus method)");
 
@@ -98,7 +103,7 @@ public class OrderController {
 			throw new NullPointerException("Status cannot be null");
 		}
 
-		Order existingOrder = orderRepository.findById(order.getOrderId());
+		CustomerOrder existingOrder = orderRepository.findById(order.getOrderId());
 
 		if (existingOrder == null) {
 			LOGGER.error("ERROR: No order exist with id " + order.getOrderId() + " (at modifyOrderStatus method)");
@@ -113,7 +118,7 @@ public class OrderController {
 			}
 
 			order.setOrderStatus(status);
-			orderRepository.update(order);
+			orderRepository.save(order);
 			LOGGER.debug("DEBUG: Order is sucessfully modified! (at modifyOrderStatus method)");
 			orderView.orderModified(order);
 

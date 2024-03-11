@@ -2,18 +2,18 @@ package com.example.orderAssignmentSystem.view;
 
 import java.util.List;
 
-import com.example.orderAssignmentSystem.model.Order;
+import com.example.orderAssignmentSystem.model.CustomerOrder;
 
 public interface OrderView {
-	void showAllOrders(List<Order> orders);
+	void showAllOrders(List<CustomerOrder> orders);
 
-	void showError(String message, Order order);
+	void showError(String message, CustomerOrder order);
 
-	void orderAdded(Order order);
+	void orderAdded(CustomerOrder order);
 	
-	void orderModified(Order order);
+	void orderModified(CustomerOrder order);
 
-	void orderRemoved(Order order);
+	void orderRemoved(CustomerOrder order);
 
-	void showErrorOrderNotFound(String message, Order order);
+	void showErrorOrderNotFound(String message, CustomerOrder order);
 }

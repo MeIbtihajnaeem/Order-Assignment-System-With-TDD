@@ -23,60 +23,63 @@ public class WorkerController {
 		workerView.showAllWorkers(workerRepository.findAll());
 	}
 
-	public void createNewWorker(Worker worker) {
+	public Worker createNewWorker(Worker worker) {
 		if (worker == null) {
 			LOGGER.error("ERROR: Worker cannot be null (at createNewWorker method)");
 			throw new NullPointerException("Worker cannot be null");
 		}
-		Worker existingWorker = workerRepository.findById(worker.getWorkerId());
+		if (worker.getWorkerId() != null) {
+			Worker existingWorker = workerRepository.findById(worker.getWorkerId());
 
-		if (existingWorker != null) {
-			LOGGER.info("INFO: Worker with " + worker.getWorkerId() + " found  (at createNewWorker method)");
-			LOGGER.error("ERROR: Therefore new worker with this id cannot be created!  (at createNewWorker method)");
-			workerView.showError("Worker with id " + worker.getWorkerId() + " Already exists", existingWorker);
-			return;
+			if (existingWorker != null) {
+				LOGGER.info("INFO: Worker with " + worker.getWorkerId() + " found  (at createNewWorker method)");
+				LOGGER.error(
+						"ERROR: Therefore new worker with this id cannot be created!  (at createNewWorker method)");
+				workerView.showError("Worker with id " + worker.getWorkerId() + " Already exists", existingWorker);
+				return null;
+			}
 		}
-		LOGGER.info("INFO: Worker with " + worker.getWorkerId() + " not found  (at createNewWorker method)");
 
-		workerRepository.save(worker);
-		LOGGER.debug("DEBUG: Worker with " + worker.getWorkerId() + " created!  (at createNewWorker method)");
+		Worker newWorker = workerRepository.save(worker);
+		LOGGER.debug("DEBUG: New Worker created!  (at createNewWorker method)");
 
-		workerView.workerAdded(worker);
+		workerView.workerAdded(newWorker);
+		return newWorker;
 
 	}
 
-	public void deleteWorker(Worker worker) {
-		if (worker == null) {
+	public void deleteWorker(Long workerId) {
+		if (workerId == null) {
 			LOGGER.error("ERROR: Worker cannot be null (at deleteWorker method)");
 			throw new NullPointerException("Worker cannot be null");
 		}
-		Worker existingWorker = workerRepository.findById(worker.getWorkerId());
+		Worker existingWorker = workerRepository.findById(workerId);
 		if (existingWorker != null) {
-			LOGGER.info("INFO: Worker with " + worker.getWorkerId() + " found (at deleteWorker method)");
+			LOGGER.info("INFO: Worker with " + existingWorker.getWorkerId() + " found (at deleteWorker method)");
 			if (existingWorker.getOrders() == null) {
 
-				workerRepository.delete(worker.getWorkerId());
+				workerRepository.delete(existingWorker);
 				LOGGER.debug("DEBUG: Worker deleted sucessfully since no orders found (at deleteWorker method)");
-				workerView.workerRemoved(worker);
+				workerView.workerRemoved(existingWorker);
 				return;
 			} else if (existingWorker.getOrders().isEmpty()) {
-				workerRepository.delete(worker.getWorkerId());
+				workerRepository.delete(existingWorker);
 				LOGGER.debug("DEBUG: Worker deleted sucessfully since no orders found (at deleteWorker method)");
-				workerView.workerRemoved(worker);
+				workerView.workerRemoved(existingWorker);
 				return;
 			} else {
 				LOGGER.error(
 						"ERROR: This worker has " + existingWorker.getOrders().size()
 								+ " orders cannot delete worker with assigned orders  (at deleteWorker method)",
-						worker);
+						existingWorker);
 
 				workerView.showError("This worker has " + existingWorker.getOrders().size()
-						+ " orders cannot delete worker with assigned orders", worker);
+						+ " orders cannot delete worker with assigned orders", existingWorker);
 
 			}
 		}
-		workerView.showErrorWorkerNotFound("No worker Exists with id " + worker.getWorkerId(), existingWorker);
-		LOGGER.error("ERROR: No worker Exists with id (at deleteWorker method)" + worker.getWorkerId(), existingWorker);
+		workerView.showErrorWorkerNotFound("No worker Exists with id " + workerId, existingWorker);
+		LOGGER.error("ERROR: No worker Exists with id (at deleteWorker method)" + workerId, existingWorker);
 
 	}
 

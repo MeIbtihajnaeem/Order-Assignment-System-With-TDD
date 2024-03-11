@@ -21,7 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.example.orderAssignmentSystem.model.Order;
+import com.example.orderAssignmentSystem.model.CustomerOrder;
 import com.example.orderAssignmentSystem.model.Worker;
 import com.example.orderAssignmentSystem.repository.WorkerRepository;
 import com.example.orderAssignmentSystem.view.WorkerView;
@@ -51,13 +51,13 @@ public class WorkerControllerTest {
 
 	private static final String DEFAULT_WORKER_NAME = "Alic";
 
-	private static final String DEFAULT_WORKER_ID = "1";
+	private static final Long DEFAULT_WORKER_ID = (long) 1;
 
 	private static final int INITIAL_INDEX = 0;
 
 	@Test
 	public void testAllworkerWhenOrderListNotEmpty() {
-		List<Order> allOrdersList = asList(new Order());
+		List<CustomerOrder> allOrdersList = asList(new CustomerOrder());
 		List<Worker> allWorkersLists = asList(new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, allOrdersList));
 		when(workerRepository.findAll()).thenReturn(allWorkersLists);
 		workerController.allWorkers();
@@ -161,10 +161,10 @@ public class WorkerControllerTest {
 
 	@Test
 	public void testDeleteWorkerWhenWorkerAlreadyExistsWithOrders() {
-		List<Order> ordersList = asList(new Order());
+		List<CustomerOrder> ordersList = asList(new CustomerOrder());
 		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, ordersList);
 		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
-		workerController.deleteWorker(workerToBeDeleted);
+		workerController.deleteWorker(DEFAULT_WORKER_ID);
 		InOrder inOrder = inOrder(workerRepository, workerView);
 		inOrder.verify(workerView).showError(
 				"This worker has " + ordersList.size() + " orders cannot delete worker with assigned orders",
@@ -177,9 +177,9 @@ public class WorkerControllerTest {
 	public void testDeleteWorkerWhenWorkerAlreadyExistsEmptyOrders() {
 		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, Collections.emptyList());
 		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
-		workerController.deleteWorker(workerToBeDeleted);
+		workerController.deleteWorker(DEFAULT_WORKER_ID);
 		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).delete(workerToBeDeleted.getWorkerId());
+		inOrder.verify(workerRepository).delete(workerToBeDeleted);
 		inOrder.verify(workerView).workerRemoved(workerToBeDeleted);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 
@@ -189,9 +189,9 @@ public class WorkerControllerTest {
 	public void testDeleteWorkerWhenWorkerAlreadyExistsNullOrders() {
 		Worker workerToBeDeleted = WORKER_WITH_No_ORDERS;
 		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
-		workerController.deleteWorker(workerToBeDeleted);
+		workerController.deleteWorker(DEFAULT_WORKER_ID);
 		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).delete(workerToBeDeleted.getWorkerId());
+		inOrder.verify(workerRepository).delete(workerToBeDeleted);
 		inOrder.verify(workerView).workerRemoved(workerToBeDeleted);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
@@ -200,7 +200,7 @@ public class WorkerControllerTest {
 	public void testDeleteWorkerWhenWorkerNotExists() {
 		Worker workerToBeDeleted = WORKER_WITH_No_ORDERS;
 		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(null);
-		workerController.deleteWorker(workerToBeDeleted);
+		workerController.deleteWorker(DEFAULT_WORKER_ID);
 		InOrder inOrder = inOrder(workerRepository, workerView);
 		inOrder.verify(workerView)
 				.showErrorWorkerNotFound("No worker Exists with id " + workerToBeDeleted.getWorkerId(), null);
