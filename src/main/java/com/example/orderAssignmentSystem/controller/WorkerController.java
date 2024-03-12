@@ -1,5 +1,7 @@
 package com.example.orderAssignmentSystem.controller;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,66 +21,42 @@ public class WorkerController {
 		this.workerView = workerView;
 	}
 
-	public void allWorkers() {
+	public void getAllWorkers() {
 		workerView.showAllWorkers(workerRepository.findAll());
 	}
 
 	public void createNewWorker(Worker worker) {
-		if (worker == null) {
-			LOGGER.error("ERROR: Worker cannot be null (at createNewWorker method)");
-			throw new NullPointerException("Worker cannot be null");
+		Objects.requireNonNull(worker, "Worker is null");
+		Objects.requireNonNull(worker.getWorkerName(), "Worker name is null");
+		Objects.requireNonNull(worker.getCodiceFiscale(), "Worker fiscal code is null");
+		if (worker.getWorkerName().length() > 20) {
+			throw new IllegalArgumentException("Worker name cannot be greater than 20");
 		}
-		if (worker.getCodiceFiscale() != null) {
-			Worker existingWorker = workerRepository.findByCodiceFiscale(worker.getCodiceFiscale());
-
-			if (existingWorker != null) {
-				LOGGER.info("INFO: Worker with " + worker.getWorkerId() + " found  (at createNewWorker method)");
-				LOGGER.error(
-						"ERROR: Therefore new worker with this id cannot be created!  (at createNewWorker method)");
-				workerView.showError("Worker with id " + worker.getWorkerId() + " Already exists", existingWorker);
-				return;
-			}
+		if (worker.getCodiceFiscale().length() != 16) {
+			throw new IllegalArgumentException("Worker Codice Fiscale must be 16 charachters");
 		}
 
-		Worker newWorker = workerRepository.save(worker);
-		LOGGER.debug("DEBUG: New Worker created!  (at createNewWorker method)");
+		workerRepository.save(worker);
 		workerView.workerAdded(worker);
-
 	}
 
 	public void deleteWorker(Long workerId) {
-		if (workerId == null) {
-			LOGGER.error("ERROR: Worker cannot be null (at deleteWorker method)");
-			throw new NullPointerException("Worker cannot be null");
+		Objects.requireNonNull(workerId, "Worker id is null");
+		if (workerId <= 0) {
+			throw new IllegalArgumentException("Worker id cannot be less than or equal to 0");
 		}
-		Worker existingWorker = workerRepository.findById(workerId);
-		if (existingWorker != null) {
-			LOGGER.info("INFO: Worker with " + existingWorker.getWorkerId() + " found (at deleteWorker method)");
-			if (existingWorker.getOrders() == null) {
-
-				workerRepository.delete(existingWorker);
-				LOGGER.debug("DEBUG: Worker deleted sucessfully since no orders found (at deleteWorker method)");
-				workerView.workerRemoved(existingWorker);
-				return;
-			} else if (existingWorker.getOrders().isEmpty()) {
-				workerRepository.delete(existingWorker);
-				LOGGER.debug("DEBUG: Worker deleted sucessfully since no orders found (at deleteWorker method)");
-				workerView.workerRemoved(existingWorker);
-				return;
-			} else {
-				LOGGER.error(
-						"ERROR: This worker has " + existingWorker.getOrders().size()
-								+ " orders cannot delete worker with assigned orders  (at deleteWorker method)",
-						existingWorker);
-
-				workerView.showError("This worker has " + existingWorker.getOrders().size()
-						+ " orders cannot delete worker with assigned orders", existingWorker);
-
-			}
+		Worker workerExists = workerRepository.findById(workerId);
+		if (workerExists == null) {
+			workerView.showErrorWorkerNotFound("No Worker found with id " + workerId, workerExists);
+			return;
 		}
-		workerView.showErrorWorkerNotFound("No worker Exists with id " + workerId, existingWorker);
-		LOGGER.error("ERROR: No worker Exists with id (at deleteWorker method)" + workerId, existingWorker);
+		if (workerExists.getOrders() != null) {
+			workerView.showError("Cannot delete worker with orders", workerExists);
+			return;
+		}
 
+		workerRepository.delete(workerExists);
+		workerView.workerRemoved(workerExists);
 	}
 
 }

@@ -46,26 +46,36 @@ public class Worker {
 		this.codiceFiscale = codiceFiscale;
 	}
 
-	public List<CustomerOrder> getOrders() {
-		return orders;
-	}
-
 	public Long getWorkerId() {
 		return workerId;
-	}
-
-	public void setOrders(List<CustomerOrder> orders) {
-		this.orders = orders;
-	}
-
-	public String getCodiceFiscale() {
-		return codiceFiscale;
 	}
 
 	public void setWorkerId(Long workerId) {
 		this.workerId = workerId;
 	}
 
-	
+	public String getWorkerName() {
+		return workerName;
+	}
+
+	public void setWorkerName(String workerName) {
+		this.workerName = workerName;
+	}
+
+	public String getCodiceFiscale() {
+		return codiceFiscale;
+	}
+
+	public void setCodiceFiscale(String codiceFiscale) {
+		this.codiceFiscale = codiceFiscale;
+	}
+
+	public List<CustomerOrder> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<CustomerOrder> orders) {
+		this.orders = orders;
+	}
 
 }

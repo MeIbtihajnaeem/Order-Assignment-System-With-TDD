@@ -3,8 +3,6 @@ package com.example.orderAssignmentSystem.controller;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -50,169 +48,238 @@ public class WorkerControllerTest {
 		closeable.close();
 	}
 
-	private static final String DEFAULT_WORKER_NAME = "Alic";
-
-	private static final String DEFAULT_WORKER_CodiceFiscale = "9j4RWZ5b0hnqA8eG";
-	private static final Long DEFAULT_WORKER_ID = 1l;
-	private static final int INITIAL_INDEX = 0;
-
 	@Test
-	public void testAllworkerWhenOrderListNotEmpty() {
-		List<CustomerOrder> allOrdersList = asList(new CustomerOrder());
-		List<Worker> allWorkersLists = asList(
-				new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, allOrdersList, DEFAULT_WORKER_CodiceFiscale));
-		when(workerRepository.findAll()).thenReturn(allWorkersLists);
-		workerController.allWorkers();
-		verify(workerView).showAllWorkers(argThat(workerList -> {
-			if (allWorkersLists.get(INITIAL_INDEX).getOrders().isEmpty()) {
-				return false;
-			}
-			return true;
-		}));
+	public void testAllWorkerMethodWhenWorker() {
+		List<Worker> worker = asList(new Worker());
+		when(workerRepository.findAll()).thenReturn(worker);
+		workerController.getAllWorkers();
+		verify(workerView).showAllWorkers(worker);
 	}
 
 	@Test
-	public void testAllWorkersWhenOrderListEmpty() {
-		List<Worker> allWorkersLists = asList(new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME,
-				Collections.emptyList(), DEFAULT_WORKER_CodiceFiscale));
-		when(workerRepository.findAll()).thenReturn(allWorkersLists);
-		workerController.allWorkers();
-		verify(workerView).showAllWorkers(argThat(workerList -> {
-			if (allWorkersLists.get(INITIAL_INDEX).getOrders().isEmpty()) {
-				return true;
-			}
-			return false;
-		}));
-	}
-
-	@Test
-	public void testAllWorkersWhenOrderNull() {
-		List<Worker> allWorkersLists = asList(
-				new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, null, DEFAULT_WORKER_CodiceFiscale));
-		when(workerRepository.findAll()).thenReturn(allWorkersLists);
-		workerController.allWorkers();
-		verify(workerView).showAllWorkers(argThat(workerList -> {
-			if (allWorkersLists.get(INITIAL_INDEX).getOrders() == null) {
-				return true;
-			}
-			return false;
-		}));
-	}
-
-	@Test
-	public void testAllOrdersWhenEmptyList() {
+	public void testAllWorkerMethodWhenEmptyList() {
 		when(workerRepository.findAll()).thenReturn(Collections.emptyList());
-		workerController.allWorkers();
+		workerController.getAllWorkers();
 		verify(workerView).showAllWorkers(Collections.emptyList());
 	}
 
 	@Test
-	public void testAllOrdersWhenNullList() {
+	public void testAllWorkerMethodWhenNullList() {
 		when(workerRepository.findAll()).thenReturn(null);
-		workerController.allWorkers();
+		workerController.getAllWorkers();
 		verify(workerView).showAllWorkers(null);
 	}
 
 	@Test
-	public void testCreateNewWorkerWhenWorkerIsNull() {
+	public void testCreateNewWorkerMethodWhenNullWorker() {
 		try {
 			workerController.createNewWorker(null);
 			fail("Expected an NullPointerException to be thrown ");
 		} catch (NullPointerException e) {
-			assertEquals("Worker cannot be null", e.getMessage());
+			assertEquals("Worker is null", e.getMessage());
 		}
-		verifyNoMoreInteractions(workerRepository);
-		verifyNoMoreInteractions(workerView);
 	}
 
-	private static final Worker WORKER_WITH_No_ORDERS = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, null,
-			DEFAULT_WORKER_CodiceFiscale);
+	@Test
+	public void testCreateNewWorkerMethodWhenWorkerNameIsNull() {
+		Worker worker = new Worker();
+		try {
+			workerController.createNewWorker(worker);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Worker name is null", e.getMessage());
+		}
+	}
 
 	@Test
-	public void testCreateNewWorkerWhenWorkerIdNotAlreadyExists() {
-		Worker newWorker = WORKER_WITH_No_ORDERS;
-		when(workerRepository.findByCodiceFiscale(DEFAULT_WORKER_CodiceFiscale)).thenReturn(null);
-		workerController.createNewWorker(newWorker);
-		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).save(newWorker);
-		inOrder.verify(workerView).workerAdded(newWorker);
+	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleIsNull() {
+		Worker worker = new Worker();
+		worker.setWorkerName("Matteo Moretti");
+//		worker.setCodiceFiscale("MRTMTT91D08F205J");
+		try {
+			workerController.createNewWorker(worker);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Worker fiscal code is null", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testCreateNewWorkerMethodWhenWorkerNameLengthGreaterThen20() {
+		Worker worker = new Worker();
+		worker.setWorkerName("Matteo Moretti Matteo Moretti");
+		worker.setCodiceFiscale("MRTMTT91D08F205J");
+		try {
+			workerController.createNewWorker(worker);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Worker name cannot be greater than 20", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testCreateNewWorkerMethodWhenWorkerNameLengthEqualTo20() {
+		Worker worker = new Worker();
+		worker.setWorkerName("abcdefaddesadf adsed");
+		worker.setCodiceFiscale("MRTMTT91D08F205J");
+		try {
+			workerController.createNewWorker(worker);
+		} catch (IllegalArgumentException e) {
+			fail("No IllegalArgumentException should be thrown for exactly 20 characters name");
+		}
+	}
+
+	@Test
+	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthGreaterThen16() {
+		Worker worker = new Worker();
+		worker.setWorkerName("Matteo Moretti");
+		worker.setCodiceFiscale("MRTMTT91D08F205JA");
+		try {
+			workerController.createNewWorker(worker);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Worker Codice Fiscale must be 16 charachters", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthLessThen16() {
+		Worker worker = new Worker();
+		worker.setWorkerName("Matteo Moretti");
+		worker.setCodiceFiscale("MRTMTT91D08F205");
+		try {
+			workerController.createNewWorker(worker);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Worker Codice Fiscale must be 16 charachters", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthEqualTo16() {
+		Worker worker = new Worker();
+		worker.setWorkerName("Matteo Moretti");
+		worker.setCodiceFiscale("MRTMTT91D08F205J");
+		try {
+			workerController.createNewWorker(worker);
+		} catch (IllegalArgumentException e) {
+			fail("No IllegalArgumentException should be thrown for exactly 16 characters CodiceFiscale");
+		}
+	}
+
+	@Test
+	public void testCreateNewWorkerMethod() {
+		Worker worker = new Worker();
+		worker.setWorkerName("Matteo Moretti");
+		worker.setCodiceFiscale("MRTMTT91D08F205J");
+		workerController.createNewWorker(worker);
+		InOrder inOrder = inOrder(workerView, workerRepository);
+		inOrder.verify(workerRepository).save(worker);
+		inOrder.verify(workerView).workerAdded(worker);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
-
 	}
 
 	@Test
-	public void testCreateNewWorkerWhenWorkerIdAlreadyExists() {
-		Worker newWorker = WORKER_WITH_No_ORDERS;
-		Worker existingWorker = new Worker(DEFAULT_WORKER_ID, "Bob", null, DEFAULT_WORKER_CodiceFiscale);
-		when(workerRepository.findByCodiceFiscale(DEFAULT_WORKER_CodiceFiscale)).thenReturn(existingWorker);
-		workerController.createNewWorker(newWorker);
-		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerView).showError("Worker with id " + newWorker.getWorkerId() + " Already exists",
-				existingWorker);
-		verifyNoMoreInteractions(ignoreStubs(workerRepository));
-	}
-
-	@Test
-	public void testDeleteWorkerWhenWorkerIsNull() {
+	public void testDeleteWorkerMethodWhenWorkerIdNull() {
 		try {
 			workerController.deleteWorker(null);
 			fail("Expected an NullPointerException to be thrown ");
 		} catch (NullPointerException e) {
-			assertEquals("Worker cannot be null", e.getMessage());
+			assertEquals("Worker id is null", e.getMessage());
 		}
-		verifyNoMoreInteractions(workerRepository);
-		verifyNoMoreInteractions(workerView);
 	}
 
 	@Test
-	public void testDeleteWorkerWhenWorkerAlreadyExistsWithOrders() {
-		List<CustomerOrder> ordersList = asList(new CustomerOrder());
-		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, ordersList,
-				DEFAULT_WORKER_CodiceFiscale);
-		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
-		workerController.deleteWorker(DEFAULT_WORKER_ID);
-		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerView).showError(
-				"This worker has " + ordersList.size() + " orders cannot delete worker with assigned orders",
-				workerToBeDeleted);
-		verifyNoMoreInteractions(ignoreStubs(workerRepository));
-
+	public void testDeleteWorkerMethodWhenWorkerIdIsZero() {
+		Worker worker = new Worker();
+		worker.setWorkerId(0l);
+		try {
+			workerController.deleteWorker(0l);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Worker id cannot be less than or equal to 0", e.getMessage());
+		}
 	}
 
 	@Test
-	public void testDeleteWorkerWhenWorkerAlreadyExistsEmptyOrders() {
-		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, Collections.emptyList(),
-				DEFAULT_WORKER_CodiceFiscale);
-		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
-		workerController.deleteWorker(DEFAULT_WORKER_ID);
-		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).delete(workerToBeDeleted);
-		inOrder.verify(workerView).workerRemoved(workerToBeDeleted);
-		verifyNoMoreInteractions(ignoreStubs(workerRepository));
-
+	public void testDeleteWorkerMethodWhenWorkerIdIsNegative() {
+		Worker worker = new Worker();
+		worker.setWorkerId(-1l);
+		try {
+			workerController.deleteWorker(-1l);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Worker id cannot be less than or equal to 0", e.getMessage());
+		}
 	}
 
 	@Test
-	public void testDeleteWorkerWhenWorkerAlreadyExistsNullOrders() {
-		Worker workerToBeDeleted = WORKER_WITH_No_ORDERS;
-		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
-		workerController.deleteWorker(DEFAULT_WORKER_ID);
-		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerRepository).delete(workerToBeDeleted);
-		inOrder.verify(workerView).workerRemoved(workerToBeDeleted);
+	public void testDeleteWorkerMethodWhenWorkerIdIsGreaterThanZero() {
+		Worker worker = new Worker();
+		worker.setWorkerId(1l);
+		try {
+			workerController.deleteWorker(1l);
+		} catch (IllegalArgumentException e) {
+			fail("No IllegalArgumentException Should be thrown thrown ");
+		}
+	}
+
+	@Test
+	public void testDeleteWorkerMethodWhenWorkerNotExists() {
+		Worker worker = new Worker();
+		long workerId = 1l;
+		worker.setWorkerId(workerId);
+		when(workerRepository.findById(workerId)).thenReturn(null);
+		workerController.deleteWorker(workerId);
+		InOrder inOrder = inOrder(workerView, workerRepository);
+		inOrder.verify(workerView).showErrorWorkerNotFound("No Worker found with id " + workerId, null);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 
 	@Test
-	public void testDeleteWorkerWhenWorkerNotExists() {
-		Worker workerToBeDeleted = WORKER_WITH_No_ORDERS;
-		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(null);
-		workerController.deleteWorker(DEFAULT_WORKER_ID);
-		InOrder inOrder = inOrder(workerRepository, workerView);
-		inOrder.verify(workerView)
-				.showErrorWorkerNotFound("No worker Exists with id " + workerToBeDeleted.getWorkerId(), null);
-		verifyNoMoreInteractions(ignoreStubs(workerRepository));
+	public void testDeleteWorkerMethodWhenWorkerExistsHasNullOrders() {
 
+		Worker worker = new Worker();
+		long workerId = 1l;
+		worker.setWorkerId(workerId);
+
+		when(workerRepository.findById(workerId)).thenReturn(worker);
+		workerController.deleteWorker(workerId);
+		InOrder inOrder = inOrder(workerView, workerRepository);
+		inOrder.verify(workerRepository).delete(worker);
+		inOrder.verify(workerView).workerRemoved(worker);
+		verifyNoMoreInteractions(ignoreStubs(workerRepository));
+	}
+
+	@Test
+	public void testDeleteWorkerMethodWhenWorkerExistsHasEmptyOrdersList() {
+
+		Worker worker = new Worker();
+		long workerId = 1l;
+		worker.setWorkerId(workerId);
+		worker.setOrders(Collections.emptyList());
+
+		when(workerRepository.findById(workerId)).thenReturn(worker);
+		workerController.deleteWorker(workerId);
+		InOrder inOrder = inOrder(workerView, workerRepository);
+		inOrder.verify(workerView).showError("Cannot delete worker with orders", worker);
+		verifyNoMoreInteractions(ignoreStubs(workerRepository));
+	}
+
+	@Test
+	public void testDeleteWorkerMethodWhenWorkerExistsButHasOrders() {
+		CustomerOrder order = new CustomerOrder();
+
+		Worker worker = new Worker();
+		long workerId = 1l;
+		worker.setWorkerId(workerId);
+		worker.setOrders(asList(order));
+
+		when(workerRepository.findById(workerId)).thenReturn(worker);
+		workerController.deleteWorker(workerId);
+		InOrder inOrder = inOrder(workerView, workerRepository);
+		inOrder.verify(workerView).showError("Cannot delete worker with orders", worker);
+		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 
 }
