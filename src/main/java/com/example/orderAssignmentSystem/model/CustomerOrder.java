@@ -31,13 +31,13 @@ public class CustomerOrder {
 	public CustomerOrder() {
 
 	}
-
-	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription) {
-		super();
-		this.orderId = orderId;
-		this.category = category;
-		this.orderDescription = orderDescription;
-	}
+//
+//	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription) {
+//		super();
+//		this.orderId = orderId;
+//		this.category = category;
+//		this.orderDescription = orderDescription;
+//	}
 
 	public CustomerOrder(CategoryEnum category, String orderDescription, OrderStatusEnum orderStatus, Worker worker) {
 		super();
@@ -47,44 +47,77 @@ public class CustomerOrder {
 		this.worker = worker;
 	}
 
-	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, Worker worker) {
-		super();
-		this.orderId = orderId;
-		this.category = category;
-		this.orderDescription = orderDescription;
-		this.worker = worker;
-	}
+//	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, Worker worker) {
+//		super();
+//		this.orderId = orderId;
+//		this.category = category;
+//		this.orderDescription = orderDescription;
+//		this.worker = worker;
+//	}
+//
+//	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, Worker worker,
+//			OrderStatusEnum orderStatus) {
+//		super();
+//		this.orderId = orderId;
+//		this.category = category;
+//		this.orderDescription = orderDescription;
+//		this.worker = worker;
+//		this.orderStatus = orderStatus;
+//	}
 
-	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, Worker worker,
-			OrderStatusEnum orderStatus) {
-		super();
+	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, OrderStatusEnum orderStatus,
+			Worker worker) {
 		this.orderId = orderId;
 		this.category = category;
 		this.orderDescription = orderDescription;
 		this.worker = worker;
 		this.orderStatus = orderStatus;
-	}
-
-	public Long getOrderId() {
-		return orderId;
-	}
-
-	public OrderStatusEnum getOrderStatus() {
-		return orderStatus;
-	}
-
-	public void setOrderStatus(OrderStatusEnum orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-
-	public Worker getWorker() {
-		return worker;
 	}
 
 	@Override
 	public String toString() {
 		return "CustomerOrder [orderId=" + orderId + ", category=" + category + ", orderDescription=" + orderDescription
 				+ ", worker=" + worker + ", orderStatus=" + orderStatus + "]";
+	}
+
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	public CategoryEnum getCategory() {
+		return category;
+	}
+
+	public String getOrderDescription() {
+		return orderDescription;
+	}
+
+	public Worker getWorker() {
+		return worker;
+	}
+
+	public OrderStatusEnum getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
+
+	public void setCategory(CategoryEnum category) {
+		this.category = category;
+	}
+
+	public void setOrderDescription(String orderDescription) {
+		this.orderDescription = orderDescription;
+	}
+
+	public void setWorker(Worker worker) {
+		this.worker = worker;
+	}
+
+	public void setOrderStatus(OrderStatusEnum orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 
 }

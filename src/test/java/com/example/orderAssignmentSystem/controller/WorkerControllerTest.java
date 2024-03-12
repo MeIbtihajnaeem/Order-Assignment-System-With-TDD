@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -51,14 +52,15 @@ public class WorkerControllerTest {
 
 	private static final String DEFAULT_WORKER_NAME = "Alic";
 
-	private static final Long DEFAULT_WORKER_ID = (long) 1;
-
+	private static final String DEFAULT_WORKER_CodiceFiscale = "9j4RWZ5b0hnqA8eG";
+	private static final Long DEFAULT_WORKER_ID = 1l;
 	private static final int INITIAL_INDEX = 0;
 
 	@Test
 	public void testAllworkerWhenOrderListNotEmpty() {
 		List<CustomerOrder> allOrdersList = asList(new CustomerOrder());
-		List<Worker> allWorkersLists = asList(new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, allOrdersList));
+		List<Worker> allWorkersLists = asList(
+				new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, allOrdersList, DEFAULT_WORKER_CodiceFiscale));
 		when(workerRepository.findAll()).thenReturn(allWorkersLists);
 		workerController.allWorkers();
 		verify(workerView).showAllWorkers(argThat(workerList -> {
@@ -71,8 +73,8 @@ public class WorkerControllerTest {
 
 	@Test
 	public void testAllWorkersWhenOrderListEmpty() {
-		List<Worker> allWorkersLists = asList(
-				new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, Collections.emptyList()));
+		List<Worker> allWorkersLists = asList(new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME,
+				Collections.emptyList(), DEFAULT_WORKER_CodiceFiscale));
 		when(workerRepository.findAll()).thenReturn(allWorkersLists);
 		workerController.allWorkers();
 		verify(workerView).showAllWorkers(argThat(workerList -> {
@@ -85,7 +87,8 @@ public class WorkerControllerTest {
 
 	@Test
 	public void testAllWorkersWhenOrderNull() {
-		List<Worker> allWorkersLists = asList(new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, null));
+		List<Worker> allWorkersLists = asList(
+				new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, null, DEFAULT_WORKER_CodiceFiscale));
 		when(workerRepository.findAll()).thenReturn(allWorkersLists);
 		workerController.allWorkers();
 		verify(workerView).showAllWorkers(argThat(workerList -> {
@@ -122,24 +125,26 @@ public class WorkerControllerTest {
 		verifyNoMoreInteractions(workerView);
 	}
 
-	private static final Worker WORKER_WITH_No_ORDERS = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME);
+	private static final Worker WORKER_WITH_No_ORDERS = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, null,
+			DEFAULT_WORKER_CodiceFiscale);
 
 	@Test
 	public void testCreateNewWorkerWhenWorkerIdNotAlreadyExists() {
 		Worker newWorker = WORKER_WITH_No_ORDERS;
-		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(null);
+		when(workerRepository.findByCodiceFiscale(DEFAULT_WORKER_CodiceFiscale)).thenReturn(null);
 		workerController.createNewWorker(newWorker);
 		InOrder inOrder = inOrder(workerRepository, workerView);
 		inOrder.verify(workerRepository).save(newWorker);
 		inOrder.verify(workerView).workerAdded(newWorker);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
+
 	}
 
 	@Test
 	public void testCreateNewWorkerWhenWorkerIdAlreadyExists() {
 		Worker newWorker = WORKER_WITH_No_ORDERS;
-		Worker existingWorker = new Worker(DEFAULT_WORKER_ID, "Bob");
-		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(existingWorker);
+		Worker existingWorker = new Worker(DEFAULT_WORKER_ID, "Bob", null, DEFAULT_WORKER_CodiceFiscale);
+		when(workerRepository.findByCodiceFiscale(DEFAULT_WORKER_CodiceFiscale)).thenReturn(existingWorker);
 		workerController.createNewWorker(newWorker);
 		InOrder inOrder = inOrder(workerRepository, workerView);
 		inOrder.verify(workerView).showError("Worker with id " + newWorker.getWorkerId() + " Already exists",
@@ -162,7 +167,8 @@ public class WorkerControllerTest {
 	@Test
 	public void testDeleteWorkerWhenWorkerAlreadyExistsWithOrders() {
 		List<CustomerOrder> ordersList = asList(new CustomerOrder());
-		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, ordersList);
+		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, ordersList,
+				DEFAULT_WORKER_CodiceFiscale);
 		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
 		workerController.deleteWorker(DEFAULT_WORKER_ID);
 		InOrder inOrder = inOrder(workerRepository, workerView);
@@ -175,7 +181,8 @@ public class WorkerControllerTest {
 
 	@Test
 	public void testDeleteWorkerWhenWorkerAlreadyExistsEmptyOrders() {
-		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, Collections.emptyList());
+		Worker workerToBeDeleted = new Worker(DEFAULT_WORKER_ID, DEFAULT_WORKER_NAME, Collections.emptyList(),
+				DEFAULT_WORKER_CodiceFiscale);
 		when(workerRepository.findById(DEFAULT_WORKER_ID)).thenReturn(workerToBeDeleted);
 		workerController.deleteWorker(DEFAULT_WORKER_ID);
 		InOrder inOrder = inOrder(workerRepository, workerView);

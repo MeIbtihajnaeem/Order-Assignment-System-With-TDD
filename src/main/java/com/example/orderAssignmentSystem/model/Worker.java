@@ -19,6 +19,8 @@ public class Worker {
 	private Long workerId;
 	@Column(name = "name")
 	private String workerName;
+	@Column(name = "codiceFiscale")
+	private String codiceFiscale;
 
 	@OneToMany
 	@JoinTable(name = "Worker_Order", joinColumns = { @JoinColumn(name = "ord_id") }, inverseJoinColumns = {
@@ -29,21 +31,17 @@ public class Worker {
 
 	}
 
-	public Worker(Long workerId, String workerName) {
-		super();
-		this.workerId = workerId;
+	public Worker(String workerName, String codiceFiscale) {
 		this.workerName = workerName;
+		this.codiceFiscale = codiceFiscale;
 	}
 
-	public Worker(String workerName) {
-		this.workerName = workerName;
-	}
-
-	public Worker(Long workerId, String workerName, List<CustomerOrder> orders) {
+	public Worker(Long workerId, String workerName, List<CustomerOrder> orders, String codiceFiscale) {
 		super();
 		this.workerId = workerId;
 		this.workerName = workerName;
 		this.orders = orders;
+		this.codiceFiscale = codiceFiscale;
 	}
 
 	public List<CustomerOrder> getOrders() {
@@ -56,6 +54,14 @@ public class Worker {
 
 	public void setOrders(List<CustomerOrder> orders) {
 		this.orders = orders;
+	}
+
+	public String getCodiceFiscale() {
+		return codiceFiscale;
+	}
+
+	public void setWorkerId(Long workerId) {
+		this.workerId = workerId;
 	}
 
 }

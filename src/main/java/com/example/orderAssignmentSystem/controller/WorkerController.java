@@ -23,28 +23,26 @@ public class WorkerController {
 		workerView.showAllWorkers(workerRepository.findAll());
 	}
 
-	public Worker createNewWorker(Worker worker) {
+	public void createNewWorker(Worker worker) {
 		if (worker == null) {
 			LOGGER.error("ERROR: Worker cannot be null (at createNewWorker method)");
 			throw new NullPointerException("Worker cannot be null");
 		}
-		if (worker.getWorkerId() != null) {
-			Worker existingWorker = workerRepository.findById(worker.getWorkerId());
+		if (worker.getCodiceFiscale() != null) {
+			Worker existingWorker = workerRepository.findByCodiceFiscale(worker.getCodiceFiscale());
 
 			if (existingWorker != null) {
 				LOGGER.info("INFO: Worker with " + worker.getWorkerId() + " found  (at createNewWorker method)");
 				LOGGER.error(
 						"ERROR: Therefore new worker with this id cannot be created!  (at createNewWorker method)");
 				workerView.showError("Worker with id " + worker.getWorkerId() + " Already exists", existingWorker);
-				return null;
+				return;
 			}
 		}
 
 		Worker newWorker = workerRepository.save(worker);
 		LOGGER.debug("DEBUG: New Worker created!  (at createNewWorker method)");
-
-		workerView.workerAdded(newWorker);
-		return newWorker;
+		workerView.workerAdded(worker);
 
 	}
 

@@ -9,7 +9,7 @@ public interface OrderRepository {
 
 	public CustomerOrder findById(Long id);
 
-	public CustomerOrder save(CustomerOrder order);
+	public void save(CustomerOrder order);
 
 	public void delete(CustomerOrder order);
 }
