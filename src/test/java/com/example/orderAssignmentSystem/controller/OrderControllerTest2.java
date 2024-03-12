@@ -354,6 +354,32 @@ public class OrderControllerTest2 {
 	}
 
 	@Test
+	public void testModifyOrderMethodWhenOrderIdIsZero() {
+		CustomerOrder order = new CustomerOrder();
+		order.setOrderId(0l);
+
+		try {
+			orderController.modifyOrder(order);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Order id cannot be 0 while creating order", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testModifyOrderMethodWhenOrderIdIsNegative() {
+		CustomerOrder order = new CustomerOrder();
+		order.setOrderId(-1l);
+
+		try {
+			orderController.modifyOrder(order);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Order id cannot be -1 while creating order", e.getMessage());
+		}
+	}
+
+	@Test
 	public void testModifyOrderMethodWhenOrderCategoryIsNull() {
 		CustomerOrder order = new CustomerOrder();
 		Long orderId = 1l;
@@ -674,7 +700,62 @@ public class OrderControllerTest2 {
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
 	}
 
-	
-	
-	
+	@Test
+	public void testDeleteOrderMethodWhenIdIsNull() {
+		Long orderId = null;
+		try {
+			orderController.deleteOrders(orderId);
+			fail("Expected an NullPointerException to be thrown ");
+		} catch (NullPointerException e) {
+			assertEquals("Order id is null", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testDeleteOrderMethodWhenIdIsZero() {
+		Long orderId = 0l;
+		try {
+			orderController.deleteOrders(orderId);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Order id cannot be 0 while deleting order", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testDeleteOrderMethodWhenIdIsNegative() {
+		Long orderId = -1l;
+		try {
+			orderController.deleteOrders(orderId);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Order id cannot be -1 while deleting order", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testDeleteOrderMethodWhenOrderNotFound() {
+		Long orderId = 1l;
+		when(orderRepository.findById(orderId)).thenReturn(null);
+		orderController.deleteOrders(orderId);
+		InOrder inOrder = inOrder(orderRepository, orderView);
+		inOrder.verify(orderView).showErrorOrderNotFound("No Order found with id " + orderId, null);
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
+
+	@Test
+	public void testDeleteOrderMethodWhenOrderFound() {
+		Long orderId = 1l;
+		CustomerOrder order = new CustomerOrder();
+		order.setOrderId(orderId);
+		when(orderRepository.findById(orderId)).thenReturn(order);
+		orderController.deleteOrders(orderId);
+		InOrder inOrder = inOrder(orderRepository, orderView);
+		inOrder.verify(orderRepository).delete(order);
+
+		inOrder.verify(orderView).orderRemoved(order);
+
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
+
 }
