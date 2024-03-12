@@ -1,6 +1,8 @@
 package com.example.orderAssignmentSystem.model;
 
 import java.util.List;
+import java.util.Objects;
+
 import javax.persistence.Entity;
 
 import javax.persistence.Column;
@@ -63,5 +65,7 @@ public class Worker {
 	public void setWorkerId(Long workerId) {
 		this.workerId = workerId;
 	}
+
+	
 
 }

@@ -1,5 +1,7 @@
 package com.example.orderAssignmentSystem.model;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -76,8 +78,26 @@ public class CustomerOrder {
 
 	@Override
 	public String toString() {
-		return "CustomerOrder [orderId=" + orderId + ", category=" + category + ", orderDescription=" + orderDescription
-				+ ", worker=" + worker + ", orderStatus=" + orderStatus + "]";
+		return "CustomerOrder [category=" + category + ", orderDescription=" + orderDescription + ", worker=" + worker
+				+ ", orderStatus=" + orderStatus + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(category, orderDescription, orderId, orderStatus);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CustomerOrder other = (CustomerOrder) obj;
+		return category == other.category && Objects.equals(orderDescription, other.orderDescription)
+				&& Objects.equals(orderId, other.orderId) && orderStatus == other.orderStatus;
 	}
 
 	public Long getOrderId() {
