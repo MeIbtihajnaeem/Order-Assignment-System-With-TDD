@@ -24,7 +24,7 @@ import com.example.orderAssignmentSystem.repository.postgresql.OrderDatabaseRepo
 import com.example.orderAssignmentSystem.repository.postgresql.WorkerDatabaseRepository;
 import com.example.orderAssignmentSystem.view.WorkerView;
 
-public class WorkerControllerTestIT {
+public class WorkerControllerIT {
 
 	@Mock
 	private WorkerRepository workerRepository;

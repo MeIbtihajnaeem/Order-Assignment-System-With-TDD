@@ -138,7 +138,7 @@ public class WorkerControllerTest {
 			workerController.createNewWorker(worker);
 			fail("Expected an IllegalArgumentException to be thrown ");
 		} catch (IllegalArgumentException e) {
-			assertEquals("Worker Codice Fiscale must be 16 charachters", e.getMessage());
+			assertEquals("Worker Codice Fiscale must be 16 characters", e.getMessage());
 		}
 	}
 
@@ -151,7 +151,7 @@ public class WorkerControllerTest {
 			workerController.createNewWorker(worker);
 			fail("Expected an IllegalArgumentException to be thrown ");
 		} catch (IllegalArgumentException e) {
-			assertEquals("Worker Codice Fiscale must be 16 charachters", e.getMessage());
+			assertEquals("Worker Codice Fiscale must be 16 characters", e.getMessage());
 		}
 	}
 

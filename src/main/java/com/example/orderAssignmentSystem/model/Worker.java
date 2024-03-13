@@ -1,11 +1,9 @@
 package com.example.orderAssignmentSystem.model;
 
 import java.util.List;
-import java.util.Objects;
-
-import javax.persistence.Entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,14 +33,6 @@ public class Worker {
 
 	public Worker(String workerName, String codiceFiscale) {
 		this.workerName = workerName;
-		this.codiceFiscale = codiceFiscale;
-	}
-
-	public Worker(Long workerId, String workerName, List<CustomerOrder> orders, String codiceFiscale) {
-		super();
-		this.workerId = workerId;
-		this.workerName = workerName;
-		this.orders = orders;
 		this.codiceFiscale = codiceFiscale;
 	}
 

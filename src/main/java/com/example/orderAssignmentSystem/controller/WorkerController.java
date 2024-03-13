@@ -13,7 +13,6 @@ public class WorkerController {
 
 	private static final Logger LOGGER = LogManager.getLogger(WorkerController.class);
 	private WorkerRepository workerRepository;
-
 	private WorkerView workerView;
 
 	public WorkerController(WorkerRepository workerRepository, WorkerView workerView) {
@@ -22,10 +21,12 @@ public class WorkerController {
 	}
 
 	public void getAllWorkers() {
+		LOGGER.info("Retrieving all workers");
 		workerView.showAllWorkers(workerRepository.findAll());
 	}
 
 	public void createNewWorker(Worker worker) {
+		LOGGER.info("Creating a new worker");
 		Objects.requireNonNull(worker, "Worker is null");
 		Objects.requireNonNull(worker.getWorkerName(), "Worker name is null");
 		Objects.requireNonNull(worker.getCodiceFiscale(), "Worker fiscal code is null");
@@ -33,30 +34,34 @@ public class WorkerController {
 			throw new IllegalArgumentException("Worker name cannot be greater than 20");
 		}
 		if (worker.getCodiceFiscale().length() != 16) {
-			throw new IllegalArgumentException("Worker Codice Fiscale must be 16 charachters");
+			throw new IllegalArgumentException("Worker Codice Fiscale must be 16 characters");
 		}
 
 		workerRepository.save(worker);
 		workerView.workerAdded(worker);
+		LOGGER.info("New worker created: {}", worker);
 	}
 
 	public void deleteWorker(Long workerId) {
+		LOGGER.info("Deleting worker with ID: {}", workerId);
 		Objects.requireNonNull(workerId, "Worker id is null");
 		if (workerId <= 0) {
 			throw new IllegalArgumentException("Worker id cannot be less than or equal to 0");
 		}
 		Worker workerExists = workerRepository.findById(workerId);
 		if (workerExists == null) {
+			LOGGER.error("No Worker found with id {}", workerId);
 			workerView.showErrorWorkerNotFound("No Worker found with id " + workerId, workerExists);
 			return;
 		}
 		if (workerExists.getOrders() != null) {
+			LOGGER.error("Cannot delete worker with orders: {}", workerExists);
 			workerView.showError("Cannot delete worker with orders", workerExists);
 			return;
 		}
 
 		workerRepository.delete(workerExists);
 		workerView.workerRemoved(workerExists);
+		LOGGER.info("Worker deleted: {}", workerExists);
 	}
-
 }

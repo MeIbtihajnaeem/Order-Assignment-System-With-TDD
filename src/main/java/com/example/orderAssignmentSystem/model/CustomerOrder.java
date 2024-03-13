@@ -33,13 +33,6 @@ public class CustomerOrder {
 	public CustomerOrder() {
 
 	}
-//
-//	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription) {
-//		super();
-//		this.orderId = orderId;
-//		this.category = category;
-//		this.orderDescription = orderDescription;
-//	}
 
 	public CustomerOrder(CategoryEnum category, String orderDescription, OrderStatusEnum orderStatus, Worker worker) {
 		super();
@@ -49,24 +42,6 @@ public class CustomerOrder {
 		this.worker = worker;
 	}
 
-//	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, Worker worker) {
-//		super();
-//		this.orderId = orderId;
-//		this.category = category;
-//		this.orderDescription = orderDescription;
-//		this.worker = worker;
-//	}
-//
-//	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, Worker worker,
-//			OrderStatusEnum orderStatus) {
-//		super();
-//		this.orderId = orderId;
-//		this.category = category;
-//		this.orderDescription = orderDescription;
-//		this.worker = worker;
-//		this.orderStatus = orderStatus;
-//	}
-
 	public CustomerOrder(Long orderId, CategoryEnum category, String orderDescription, OrderStatusEnum orderStatus,
 			Worker worker) {
 		this.orderId = orderId;
@@ -74,30 +49,6 @@ public class CustomerOrder {
 		this.orderDescription = orderDescription;
 		this.worker = worker;
 		this.orderStatus = orderStatus;
-	}
-
-	@Override
-	public String toString() {
-		return "CustomerOrder [category=" + category + ", orderDescription=" + orderDescription + ", worker=" + worker
-				+ ", orderStatus=" + orderStatus + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(category, orderDescription, orderId, orderStatus);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CustomerOrder other = (CustomerOrder) obj;
-		return category == other.category && Objects.equals(orderDescription, other.orderDescription)
-				&& Objects.equals(orderId, other.orderId) && orderStatus == other.orderStatus;
 	}
 
 	public Long getOrderId() {
@@ -130,10 +81,6 @@ public class CustomerOrder {
 
 	public void setOrderDescription(String orderDescription) {
 		this.orderDescription = orderDescription;
-	}
-
-	public void setWorker(Worker worker) {
-		this.worker = worker;
 	}
 
 	public void setOrderStatus(OrderStatusEnum orderStatus) {
