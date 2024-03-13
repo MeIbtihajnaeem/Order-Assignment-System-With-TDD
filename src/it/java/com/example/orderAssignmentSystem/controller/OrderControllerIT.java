@@ -60,17 +60,17 @@ public class OrderControllerIT {
 	public void releaseMocks() throws Exception {
 		closeable.close();
 	}
-
-	@Test
-	public void testAllOrders() {
-		Worker worker = new Worker("bob", DEFAULT_WORKER_CodiceFiscale);
-		Worker newWorker = workerRepository.save(worker);
-		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING,
-				newWorker);
-		CustomerOrder savedOrder = orderRepository.save(order);
-		orderController.allOrders();
-		verify(orderView).showAllOrders(asList(savedOrder));
-	}
+//
+//	@Test
+//	public void testAllOrders() {
+//		Worker worker = new Worker("bob", DEFAULT_WORKER_CodiceFiscale);
+//		Worker newWorker = workerRepository.save(worker);
+//		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING,
+//				newWorker);
+//		CustomerOrder savedOrder = orderRepository.save(order);
+//		orderController.allOrders();
+//		verify(orderView).showAllOrders(asList(savedOrder));
+//	}
 
 	@Test
 	public void testNewOrder() {

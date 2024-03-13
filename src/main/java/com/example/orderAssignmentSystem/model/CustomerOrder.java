@@ -87,4 +87,28 @@ public class CustomerOrder {
 		this.orderStatus = orderStatus;
 	}
 
+	@Override
+	public String toString() {
+		return "CustomerOrder [category=" + category + ", orderDescription=" + orderDescription + ", worker=" + worker
+				+ ", orderStatus=" + orderStatus + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(category, orderDescription, orderStatus, worker);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CustomerOrder other = (CustomerOrder) obj;
+		return category == other.category && Objects.equals(orderDescription, other.orderDescription)
+				&& orderStatus == other.orderStatus && Objects.equals(worker, other.worker);
+	}
+
 }
