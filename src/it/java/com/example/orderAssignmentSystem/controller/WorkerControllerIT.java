@@ -62,16 +62,16 @@ public class WorkerControllerIT {
 		closeable.close();
 	}
 
-//	@Test
-//	public void testAllWorkers() {
-//		Worker worker = new Worker("bob", DEFAULT_WORKER_CodiceFiscale);
-//		Worker newWorker = workerRepository.save(worker);
-//		CustomerOrder newOrder = orderRepository
-//				.save(new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING, newWorker));
-//		newWorker.setOrders(asList(newOrder));
-//		workerController.getAllWorkers();
-//		verify(workerView).showAllWorkers(asList(newWorker));
-//	}
+	@Test
+	public void testAllWorkers() {
+		Worker worker = new Worker("bob", DEFAULT_WORKER_CodiceFiscale);
+		Worker newWorker = workerRepository.save(worker);
+		CustomerOrder newOrder = orderRepository
+				.save(new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING, newWorker));
+		newWorker.setOrders(asList(newOrder));
+		workerController.getAllWorkers();
+		verify(workerView).showAllWorkers(asList(newWorker));
+	}
 
 	@Test
 	public void testNewWorker() {
