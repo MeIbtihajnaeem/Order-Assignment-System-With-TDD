@@ -15,6 +15,9 @@
 		<mockito.version>3.7.0</mockito.version>
 		<log4j.version>2.13.0</log4j.version>
 		<postgresql.version>42.7.2</postgresql.version>
+		<postgres.user>testUser</postgres.user>
+		<postgres.password>test123</postgres.password>
+		<postgres.dbName>orderWorkerTestDb</postgres.dbName>
 	</properties>
 
 	<dependencies>
@@ -66,6 +69,77 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.22.1</version>
 				</plugin>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>1.15.8</version>
+					<configuration>
+						<targetClasses>
+							<param>
+								com.example.orderAssignmentSystem.controller.*</param>
+						</targetClasses>
+						<targetTests>
+							<param>
+								com.example.orderAssignmentSystem.controller.*</param>
+						</targetTests>
+						<excludedClasses>
+							<param>
+								com.example.orderAssignmentSystem.repository.postgresql.**</param>
+						</excludedClasses>
+						<excludedTestClasses>
+							<param>
+								com.example.orderAssignmentSystem.controller.**IT</param>
+						</excludedTestClasses>
+						<mutators>
+							<mutator>STRONGER</mutator>
+						</mutators>
+						<outputFormats>
+							<outputFormat>HTML</outputFormat>
+						</outputFormats>
+						<mutationThreshold>90</mutationThreshold>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>mutationCoverage</goal>
+							</goals>
+							<phase>verify</phase>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.11</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>prepare-agent</goal>
+								<goal>report</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<excludes>
+							<exclude>
+								com/example/orderAssignmentSystem/repository/postgresql/**</exclude>
+							<exclude>com/example/orderAssignmentSystem/model/**</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.eluder.coveralls</groupId>
+					<artifactId>coveralls-maven-plugin</artifactId>
+					<version>4.3.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>javax.xml.bind</groupId>
+							<artifactId>jaxb-api</artifactId>
+							<version>2.3.1</version>
+						</dependency>
+					</dependencies>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -103,83 +177,43 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.11</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludes>
-						<exclude>com/example/orderAssignmentSystem/repository/postgresql/**</exclude>
-						<exclude>com/example/orderAssignmentSystem/model/**</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eluder.coveralls</groupId>
-				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>4.3.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>javax.xml.bind</groupId>
-						<artifactId>jaxb-api</artifactId>
-						<version>2.3.1</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.pitest</groupId>
-				<artifactId>pitest-maven</artifactId>
-				<version>1.15.8</version>
-				<configuration>
-					<targetClasses>
-						<param>com.example.orderAssignmentSystem.controller.*</param>
-					</targetClasses>
-					<targetTests>
-						<param>com.example.orderAssignmentSystem.controller.*</param>
-					</targetTests>
-					<excludedClasses>
-						<param>com.example.orderAssignmentSystem.repository.postgresql.**</param>
-					</excludedClasses>
-					<excludedTestClasses>
-						<param>com.example.orderAssignmentSystem.controller.**IT</param>
-					</excludedTestClasses>
-					<mutators>
-						<mutator>STRONGER</mutator>
-					</mutators>
-					<outputFormats>
-						<outputFormat>HTML</outputFormat>
-					</outputFormats>
-					<mutationThreshold>90</mutationThreshold>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>mutationCoverage</goal>
-						</goals>
-						<phase>verify</phase>
-					</execution>
-				</executions>
-			</plugin>
+
+
 		</plugins>
 	</build>
 
 	<profiles>
 		<profile>
-			<id>testApp</id>
+			<id>mutation-testing-with-coverage</id>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 					</plugin>
+					<plugin>
+						<groupId>org.eluder.coveralls</groupId>
+						<artifactId>coveralls-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>mutationCoverage</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>integration-test</id>
+			<build>
+				<plugins>
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
@@ -193,9 +227,10 @@
 											<port>5432:5432</port>
 										</ports>
 										<env>
-											<POSTGRES_USER>testUser</POSTGRES_USER>
-											<POSTGRES_PASSWORD>test123</POSTGRES_PASSWORD>
-											<POSTGRES_DB>orderWorkerTestDb</POSTGRES_DB>
+											<POSTGRES_USER>${postgres.user}</POSTGRES_USER>
+											<POSTGRES_PASSWORD>
+												${postgres.password}</POSTGRES_PASSWORD>
+											<POSTGRES_DB>${postgres.dbName}</POSTGRES_DB>
 										</env>
 									</run>
 								</image>
@@ -228,18 +263,6 @@
 									<goal>integration-test</goal>
 									<goal>verify</goal>
 								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.pitest</groupId>
-						<artifactId>pitest-maven</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>mutationCoverage</goal>
-								</goals>
-								<phase>verify</phase>
 							</execution>
 						</executions>
 					</plugin>
