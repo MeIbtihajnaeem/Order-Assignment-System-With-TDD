@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - java: 8
-            additional-maven-args: "-Pintegration-test -Dpostgres.user=$DATABASE_USER -Dpostgres.password=$DATABASE_PASSWORD -Dpostgres.dbName=$DATABASE_NAME"
+            additional-maven-args: "-Pintegration-test"
     name: Build with Java ${{ matrix.java }}
     steps:
       - uses: actions/checkout@v2
@@ -37,9 +37,9 @@ jobs:
           echo '    <class>com.example.orderAssignmentSystem.model.CustomerOrder</class>' >> src/test/resources/META-INF/persistence.xml
           echo '    <class>com.example.orderAssignmentSystem.model.Worker</class>' >> src/test/resources/META-INF/persistence.xml
           echo '    <properties>' >> src/test/resources/META-INF/persistence.xml
-          echo "      <property name=\"javax.persistence.jdbc.url\" value=\"jdbc:postgresql://localhost:5432/$DATABASE_NAME\" />" >> src/test/resources/META-INF/persistence.xml
-          echo "      <property name=\"javax.persistence.jdbc.user\" value=\"$DATABASE_USER\" />" >> src/test/resources/META-INF/persistence.xml
-          echo "      <property name=\"javax.persistence.jdbc.password\" value=\"$DATABASE_PASSWORD\" />" >> src/test/resources/META-INF/persistence.xml
+          echo '      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/orderWorkerTestDb" />' >> src/test/resources/META-INF/persistence.xml
+          echo '      <property name="javax.persistence.jdbc.user" value="testUser" />' >> src/test/resources/META-INF/persistence.xml
+          echo '      <property name="javax.persistence.jdbc.password" value="test123" />' >> src/test/resources/META-INF/persistence.xml
           echo '      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />' >> src/test/resources/META-INF/persistence.xml
           echo '      <property name="hibernate.hbm2ddl.auto" value="create-drop" />' >> src/test/resources/META-INF/persistence.xml
           echo '    </properties>' >> src/test/resources/META-INF/persistence.xml
