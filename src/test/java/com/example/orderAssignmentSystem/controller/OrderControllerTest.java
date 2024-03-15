@@ -168,19 +168,19 @@ public class OrderControllerTest {
 
 	}
 
-	@Test
-	public void testCreateNewOrderMethodWhenOrderCategoryIsNotPlumber() {
-
-		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
-		CategoryEnum status = CategoryEnum.ELECTRICIAN;
-		CustomerOrder order = new CustomerOrder(status, orderDescription, OrderStatusEnum.PENDING, new Worker());
-		try {
-			orderController.createNewOrder(order);
-			fail("Expected an IllegalArgumentException to be thrown ");
-		} catch (IllegalArgumentException e) {
-			assertEquals("Order Category cannot be " + status + " while creating order", e.getMessage());
-		}
-	}
+//	@Test
+//	public void testCreateNewOrderMethodWhenOrderCategoryIsNotPlumber() {
+//
+//		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
+//		CategoryEnum status = CategoryEnum.ELECTRICIAN;
+//		CustomerOrder order = new CustomerOrder(status, orderDescription, OrderStatusEnum.PENDING, new Worker());
+//		try {
+//			orderController.createNewOrder(order);
+//			fail("Expected an IllegalArgumentException to be thrown ");
+//		} catch (IllegalArgumentException e) {
+//			assertEquals("Order Category cannot be " + status + " while creating order", e.getMessage());
+//		}
+//	}
 
 	@Test
 	public void testCreateNewOrderMethodWhenOrderStatusIsNotPending() {
@@ -257,6 +257,25 @@ public class OrderControllerTest {
 	}
 
 	@Test
+	public void testCreateNewOrderMethodWhenWorkerFoundButWithDifferentCategory() {
+		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
+		CategoryEnum workerCategory = CategoryEnum.PLUMBER;
+		CategoryEnum orderCategory = CategoryEnum.ELECTRICIAN;
+		Long workerId = 1l;
+		Worker worker = new Worker();
+		worker.setWorkerId(workerId);
+		worker.setCategory(workerCategory);
+		CustomerOrder order = new CustomerOrder(orderCategory, orderDescription, status, worker);
+		when(workerRepository.findById(workerId)).thenReturn(worker);
+		orderController.createNewOrder(order);
+		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
+		inOrder.verify(orderView).showError("Cannot assign orders to this worker because it is of different category",
+				order);
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
+
+	@Test
 	public void testCreateNewOrderMethodWhenWorkerFoundButAlreadyAssignedPendingOrder() {
 		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
 		OrderStatusEnum status = OrderStatusEnum.PENDING;
@@ -264,6 +283,8 @@ public class OrderControllerTest {
 		Long orderId = 1l;
 		Worker worker = new Worker();
 		worker.setWorkerId(workerId);
+		worker.setCategory(CategoryEnum.PLUMBER);
+
 		CustomerOrder previousPendingOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, status, worker);
 		previousPendingOrder.setOrderId(orderId);
 		worker.setOrders(asList(previousPendingOrder));
@@ -283,6 +304,8 @@ public class OrderControllerTest {
 		Long orderId = 1l;
 		Worker worker = new Worker();
 		worker.setWorkerId(workerId);
+		worker.setCategory(CategoryEnum.PLUMBER);
+
 		CustomerOrder previousPendingOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription,
 				OrderStatusEnum.COMPLETED, worker);
 		previousPendingOrder.setOrderId(orderId);
@@ -303,6 +326,7 @@ public class OrderControllerTest {
 		Long workerId = 1l;
 		Worker worker = new Worker();
 		worker.setWorkerId(workerId);
+		worker.setCategory(CategoryEnum.PLUMBER);
 		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, status, worker);
 		when(workerRepository.findById(workerId)).thenReturn(worker);
 		orderController.createNewOrder(order);
@@ -568,7 +592,31 @@ public class OrderControllerTest {
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
 	}
 
-	// Update category, update status, update worker,
+	@Test
+	public void testModifyOrderMethodWhenOrderCategoryChangedButWorkerHadDifferentCategory() {
+		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
+
+		CategoryEnum oldCategory = CategoryEnum.PLUMBER;
+		CategoryEnum newCategory = CategoryEnum.ELECTRICIAN;
+		Long workerId = 1l;
+		Long orderId = 1l;
+
+		Worker worker = new Worker();
+		worker.setWorkerId(workerId);
+		worker.setCategory(oldCategory);
+		CustomerOrder oldOrder = new CustomerOrder(orderId, oldCategory, orderDescription, OrderStatusEnum.PENDING,
+				worker);
+		CustomerOrder updatedOrder = new CustomerOrder(orderId, newCategory, orderDescription, OrderStatusEnum.PENDING,
+				worker);
+
+		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
+		when(workerRepository.findById(workerId)).thenReturn(worker);
+		orderController.modifyOrder(updatedOrder);
+		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
+		inOrder.verify(orderView).showError("Cannot assign orders to this worker because it is of different category",
+				updatedOrder);
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
 
 	@Test
 	public void testModifyOrderMethodWhenOrderCategoryChanged() {
@@ -579,15 +627,21 @@ public class OrderControllerTest {
 		Long workerId = 1l;
 		Long orderId = 1l;
 
-		Worker worker = new Worker();
-		worker.setWorkerId(workerId);
+		Worker oldWorker = new Worker();
+		oldWorker.setWorkerId(workerId);
+		oldWorker.setCategory(newCategory);
+
+		Worker newWorker = new Worker();
+		newWorker.setWorkerId(2l);
+		newWorker.setCategory(newCategory);
+
 		CustomerOrder oldOrder = new CustomerOrder(orderId, oldCategory, orderDescription, OrderStatusEnum.PENDING,
-				worker);
+				oldWorker);
 		CustomerOrder updatedOrder = new CustomerOrder(orderId, newCategory, orderDescription, OrderStatusEnum.PENDING,
-				worker);
+				newWorker);
 
 		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
-		when(workerRepository.findById(workerId)).thenReturn(worker);
+		when(workerRepository.findById(2l)).thenReturn(newWorker);
 		orderController.modifyOrder(updatedOrder);
 
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
@@ -606,6 +660,8 @@ public class OrderControllerTest {
 
 		Worker worker = new Worker();
 		worker.setWorkerId(workerId);
+		worker.setCategory(CategoryEnum.PLUMBER);
+
 		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, oldOrderDescription,
 				OrderStatusEnum.PENDING, worker);
 		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, newOrderDescription,
@@ -632,6 +688,7 @@ public class OrderControllerTest {
 
 		Worker worker = new Worker();
 		worker.setWorkerId(workerId);
+		worker.setCategory(CategoryEnum.PLUMBER);
 		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, oldStatus, worker);
 		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, newStatus,
 				worker);
@@ -647,19 +704,42 @@ public class OrderControllerTest {
 	}
 
 	@Test
+	public void testModifyOrderMethodWhenWorkerFoundButWithDifferentCategory() {
+		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
+		Long orderId = 1l;
+
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
+		CategoryEnum workerCategory = CategoryEnum.PLUMBER;
+		CategoryEnum orderCategory = CategoryEnum.ELECTRICIAN;
+		Long workerId = 1l;
+		Worker worker = new Worker();
+		worker.setWorkerId(workerId);
+		worker.setCategory(workerCategory);
+		CustomerOrder order = new CustomerOrder(orderId, orderCategory, orderDescription, status, worker);
+		when(orderRepository.findById(orderId)).thenReturn(order);
+		when(workerRepository.findById(workerId)).thenReturn(worker);
+		orderController.modifyOrder(order);
+		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
+		inOrder.verify(orderView).showError("Cannot assign orders to this worker because it is of different category",
+				order);
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
+
+	@Test
 	public void testModifyOrderMethodWhenOrderWorkerChanged() {
 		final String orderDescription = "old order description";
 		OrderStatusEnum status = OrderStatusEnum.PENDING;
 
 		Long oldWorkerId = 1l;
 
-		Worker oldWorker = new Worker("Alic", "abc");
+		Worker oldWorker = new Worker("Alic", CategoryEnum.PLUMBER);
 		oldWorker.setWorkerId(oldWorkerId);
 
 		Long newWorkerId = 2l;
 
-		Worker newWorker = new Worker("Bob", "xyz");
+		Worker newWorker = new Worker("Bob", CategoryEnum.ELECTRICIAN);
 		newWorker.setWorkerId(newWorkerId);
+		newWorker.setCategory(CategoryEnum.PLUMBER);
 
 		Long orderId = 1l;
 

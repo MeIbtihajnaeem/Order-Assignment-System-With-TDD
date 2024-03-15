@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.example.orderAssignmentSystem.model.CustomerOrder;
 import com.example.orderAssignmentSystem.model.Worker;
-import com.example.orderAssignmentSystem.model.enums.CategoryEnum;
 import com.example.orderAssignmentSystem.model.enums.OrderStatusEnum;
 import com.example.orderAssignmentSystem.repository.OrderRepository;
 import com.example.orderAssignmentSystem.repository.WorkerRepository;
@@ -46,11 +45,11 @@ public class OrderController {
 
 		Objects.requireNonNull(order, String.format(NULL_ERROR, "Order"));
 		_validateOrder(order);
-
-		if (order.getCategory() != CategoryEnum.PLUMBER) {
-			LOGGER.error(String.format(ORDER_ERROR, "Category", order.getCategory()));
-			throw new IllegalArgumentException(String.format(ORDER_ERROR, "Category", order.getCategory()));
-		}
+//
+//		if (order.getCategory() != CategoryEnum.PLUMBER) {
+//			LOGGER.error(String.format(ORDER_ERROR, "Category", order.getCategory()));
+//			throw new IllegalArgumentException(String.format(ORDER_ERROR, "Category", order.getCategory()));
+//		}
 		if (order.getOrderStatus() != OrderStatusEnum.PENDING) {
 			LOGGER.error(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
 			throw new IllegalArgumentException(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
@@ -60,6 +59,11 @@ public class OrderController {
 		if (existingWorker == null) {
 			LOGGER.error(String.format(NO_WORKER_FOUND, "Worker", order.getWorker().getWorkerId()));
 			orderView.showError(String.format(NO_WORKER_FOUND, "Worker", order.getWorker().getWorkerId()), order);
+			return;
+		}
+		if (existingWorker.getCategory() != order.getCategory()) {
+			LOGGER.error("Cannot assign orders to this worker because it is of different category");
+			orderView.showError("Cannot assign orders to this worker because it is of different category", order);
 			return;
 		}
 
@@ -100,6 +104,14 @@ public class OrderController {
 			LOGGER.error(String.format(NO_WORKER_FOUND, "Worker", order.getWorker().getWorkerId()));
 			orderView.showError(String.format(NO_WORKER_FOUND, "Worker", order.getWorker().getWorkerId()), order);
 			return;
+		}
+		if (existingWorker.getCategory() != order.getCategory()) {
+			LOGGER.error("Cannot assign orders to this worker because it is of different category");
+			orderView.showError("Cannot assign orders to this worker because it is of different category", order);
+			return;
+		}
+		if (existingWorker.getCategory() != order.getCategory()) {
+
 		}
 		orderRepository.save(order);
 		orderView.orderModified(order);

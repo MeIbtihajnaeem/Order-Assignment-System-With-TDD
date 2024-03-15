@@ -29,12 +29,9 @@ public class WorkerController {
 		LOGGER.info("Creating a new worker");
 		Objects.requireNonNull(worker, "Worker is null");
 		Objects.requireNonNull(worker.getWorkerName(), "Worker name is null");
-		Objects.requireNonNull(worker.getCodiceFiscale(), "Worker fiscal code is null");
+		Objects.requireNonNull(worker.getCategory(), "Worker category is null");
 		if (worker.getWorkerName().length() > 20) {
 			throw new IllegalArgumentException("Worker name cannot be greater than 20");
-		}
-		if (worker.getCodiceFiscale().length() != 16) {
-			throw new IllegalArgumentException("Worker Codice Fiscale must be 16 characters");
 		}
 
 		workerRepository.save(worker);

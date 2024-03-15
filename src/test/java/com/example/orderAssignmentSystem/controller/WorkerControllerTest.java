@@ -22,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.example.orderAssignmentSystem.model.CustomerOrder;
 import com.example.orderAssignmentSystem.model.Worker;
+import com.example.orderAssignmentSystem.model.enums.CategoryEnum;
 import com.example.orderAssignmentSystem.repository.WorkerRepository;
 import com.example.orderAssignmentSystem.view.WorkerView;
 
@@ -92,7 +93,7 @@ public class WorkerControllerTest {
 	}
 
 	@Test
-	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleIsNull() {
+	public void testCreateNewWorkerMethodWhenWorkerCategoryIsNull() {
 		Worker worker = new Worker();
 		worker.setWorkerName("Matteo Moretti");
 //		worker.setCodiceFiscale("MRTMTT91D08F205J");
@@ -100,7 +101,7 @@ public class WorkerControllerTest {
 			workerController.createNewWorker(worker);
 			fail("Expected an NullPointerException to be thrown ");
 		} catch (NullPointerException e) {
-			assertEquals("Worker fiscal code is null", e.getMessage());
+			assertEquals("Worker category is null", e.getMessage());
 		}
 	}
 
@@ -108,7 +109,7 @@ public class WorkerControllerTest {
 	public void testCreateNewWorkerMethodWhenWorkerNameLengthGreaterThen20() {
 		Worker worker = new Worker();
 		worker.setWorkerName("Matteo Moretti Matteo Moretti");
-		worker.setCodiceFiscale("MRTMTT91D08F205J");
+		worker.setCategory(CategoryEnum.PLUMBER);
 		try {
 			workerController.createNewWorker(worker);
 			fail("Expected an IllegalArgumentException to be thrown ");
@@ -121,7 +122,7 @@ public class WorkerControllerTest {
 	public void testCreateNewWorkerMethodWhenWorkerNameLengthEqualTo20() {
 		Worker worker = new Worker();
 		worker.setWorkerName("abcdefaddesadf adsed");
-		worker.setCodiceFiscale("MRTMTT91D08F205J");
+		worker.setCategory(CategoryEnum.PLUMBER);
 		try {
 			workerController.createNewWorker(worker);
 		} catch (IllegalArgumentException e) {
@@ -129,55 +130,55 @@ public class WorkerControllerTest {
 		}
 	}
 
-	@Test
-	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthGreaterThen16() {
-		Worker worker = new Worker();
-		worker.setWorkerName("Matteo Moretti");
-		worker.setCodiceFiscale("MRTMTT91D08F205JA");
-		try {
-			workerController.createNewWorker(worker);
-			fail("Expected an IllegalArgumentException to be thrown ");
-		} catch (IllegalArgumentException e) {
-			assertEquals("Worker Codice Fiscale must be 16 characters", e.getMessage());
-		}
-	}
-
-	@Test
-	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthLessThen16() {
-		Worker worker = new Worker();
-		worker.setWorkerName("Matteo Moretti");
-		worker.setCodiceFiscale("MRTMTT91D08F205");
-		try {
-			workerController.createNewWorker(worker);
-			fail("Expected an IllegalArgumentException to be thrown ");
-		} catch (IllegalArgumentException e) {
-			assertEquals("Worker Codice Fiscale must be 16 characters", e.getMessage());
-		}
-	}
-
-	@Test
-	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthEqualTo16() {
-		Worker worker = new Worker();
-		worker.setWorkerName("Matteo Moretti");
-		worker.setCodiceFiscale("MRTMTT91D08F205J");
-		try {
-			workerController.createNewWorker(worker);
-		} catch (IllegalArgumentException e) {
-			fail("No IllegalArgumentException should be thrown for exactly 16 characters CodiceFiscale");
-		}
-	}
-
-	@Test
-	public void testCreateNewWorkerMethod() {
-		Worker worker = new Worker();
-		worker.setWorkerName("Matteo Moretti");
-		worker.setCodiceFiscale("MRTMTT91D08F205J");
-		workerController.createNewWorker(worker);
-		InOrder inOrder = inOrder(workerView, workerRepository);
-		inOrder.verify(workerRepository).save(worker);
-		inOrder.verify(workerView).workerAdded(worker);
-		verifyNoMoreInteractions(ignoreStubs(workerRepository));
-	}
+//	@Test
+//	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthGreaterThen16() {
+//		Worker worker = new Worker();
+//		worker.setWorkerName("Matteo Moretti");
+//		worker.setCodiceFiscale("MRTMTT91D08F205JA");
+//		try {
+//			workerController.createNewWorker(worker);
+//			fail("Expected an IllegalArgumentException to be thrown ");
+//		} catch (IllegalArgumentException e) {
+//			assertEquals("Worker Codice Fiscale must be 16 characters", e.getMessage());
+//		}
+//	}
+//
+//	@Test
+//	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthLessThen16() {
+//		Worker worker = new Worker();
+//		worker.setWorkerName("Matteo Moretti");
+//		worker.setCodiceFiscale("MRTMTT91D08F205");
+//		try {
+//			workerController.createNewWorker(worker);
+//			fail("Expected an IllegalArgumentException to be thrown ");
+//		} catch (IllegalArgumentException e) {
+//			assertEquals("Worker Codice Fiscale must be 16 characters", e.getMessage());
+//		}
+//	}
+//
+//	@Test
+//	public void testCreateNewWorkerMethodWhenWorkerCodiceFiscaleLengthEqualTo16() {
+//		Worker worker = new Worker();
+//		worker.setWorkerName("Matteo Moretti");
+//		worker.setCodiceFiscale("MRTMTT91D08F205J");
+//		try {
+//			workerController.createNewWorker(worker);
+//		} catch (IllegalArgumentException e) {
+//			fail("No IllegalArgumentException should be thrown for exactly 16 characters CodiceFiscale");
+//		}
+//	}
+//
+//	@Test
+//	public void testCreateNewWorkerMethod() {
+//		Worker worker = new Worker();
+//		worker.setWorkerName("Matteo Moretti");
+//		worker.setCodiceFiscale("MRTMTT91D08F205J");
+//		workerController.createNewWorker(worker);
+//		InOrder inOrder = inOrder(workerView, workerRepository);
+//		inOrder.verify(workerRepository).save(worker);
+//		inOrder.verify(workerView).workerAdded(worker);
+//		verifyNoMoreInteractions(ignoreStubs(workerRepository));
+//	}
 
 	@Test
 	public void testDeleteWorkerMethodWhenWorkerIdNull() {

@@ -63,7 +63,7 @@ public class OrderControllerIT {
 
 	@Test
 	public void testAllOrders() {
-		Worker worker = new Worker("bob", DEFAULT_WORKER_CodiceFiscale);
+		Worker worker = new Worker("bob", CategoryEnum.PLUMBER);
 		Worker newWorker = workerRepository.save(worker);
 		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING,
 				newWorker);
@@ -74,7 +74,7 @@ public class OrderControllerIT {
 
 	@Test
 	public void testNewOrder() {
-		Worker worker = new Worker("alic", DEFAULT_WORKER_CodiceFiscale);
+		Worker worker = new Worker("alic", CategoryEnum.PLUMBER);
 		Worker newWorker = workerRepository.save(worker);
 		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING,
 				newWorker);
@@ -88,14 +88,17 @@ public class OrderControllerIT {
 		OrderStatusEnum oldStatus = OrderStatusEnum.PENDING;
 		OrderStatusEnum newStatus = OrderStatusEnum.COMPLETED;
 
-		Worker worker = new Worker("alic", DEFAULT_WORKER_CodiceFiscale);
-		Worker savedWorker = workerRepository.save(worker);
+		Worker oldWorker = new Worker("alic", CategoryEnum.PLUMBER);
+		Worker oldSavedWorker = workerRepository.save(oldWorker);
 
-		CustomerOrder oldOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, oldStatus, savedWorker);
+		Worker newWorker = new Worker("alic", CategoryEnum.ELECTRICIAN);
+		Worker newSavedWorker = workerRepository.save(newWorker);
+
+		CustomerOrder oldOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, oldStatus, oldSavedWorker);
 		Long updatedOrderId = orderRepository.save(oldOrder).getOrderId();
 
 		CustomerOrder updatedOrder = new CustomerOrder(CategoryEnum.ELECTRICIAN, orderDescription, newStatus,
-				savedWorker);
+				newSavedWorker);
 
 		updatedOrder.setOrderId(updatedOrderId);
 
@@ -105,7 +108,7 @@ public class OrderControllerIT {
 
 	@Test
 	public void testDeleteOrder() {
-		Worker worker = new Worker("Jhon", DEFAULT_WORKER_CodiceFiscale);
+		Worker worker = new Worker("Jhon", CategoryEnum.PLUMBER);
 		Worker newWorker = workerRepository.save(worker);
 		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING,
 				newWorker);

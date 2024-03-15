@@ -42,7 +42,7 @@ public class WorkerControllerIT {
 	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
 	private static final String PERSISTENCE_UNIT_NAME = "myPersistenceUnit";
-	private static final String DEFAULT_WORKER_CodiceFiscale = "9j4RWZ5b0hnqA8eG";
+	private static final CategoryEnum DEFAULT_WORKER_Category = CategoryEnum.PLUMBER;
 
 	@Before
 	public void setup() {
@@ -64,7 +64,7 @@ public class WorkerControllerIT {
 
 	@Test
 	public void testAllWorkers() {
-		Worker worker = new Worker("bob", DEFAULT_WORKER_CodiceFiscale);
+		Worker worker = new Worker("bob", DEFAULT_WORKER_Category);
 		Worker newWorker = workerRepository.save(worker);
 		CustomerOrder newOrder = orderRepository
 				.save(new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING, newWorker));
@@ -75,7 +75,7 @@ public class WorkerControllerIT {
 
 	@Test
 	public void testNewWorker() {
-		Worker worker = new Worker("bob", DEFAULT_WORKER_CodiceFiscale);
+		Worker worker = new Worker("bob", DEFAULT_WORKER_Category);
 		workerController.createNewWorker(worker);
 
 		verify(workerView).workerAdded(worker);
@@ -83,7 +83,7 @@ public class WorkerControllerIT {
 
 	@Test
 	public void testDeleteWorker() {
-		Worker worker = new Worker("Jhon", DEFAULT_WORKER_CodiceFiscale);
+		Worker worker = new Worker("Jhon", DEFAULT_WORKER_Category);
 		Worker newWorker = workerRepository.save(worker);
 		workerController.deleteWorker(newWorker.getWorkerId());
 		verify(workerView).workerRemoved(newWorker);

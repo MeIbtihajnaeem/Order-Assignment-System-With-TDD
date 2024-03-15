@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 
 import com.example.orderAssignmentSystem.model.Worker;
 import com.example.orderAssignmentSystem.repository.WorkerRepository;
@@ -47,16 +45,6 @@ public class WorkerDatabaseRepository implements WorkerRepository {
 		transaction.commit();
 	}
 
-	@Override
-	public Worker findByCodiceFiscale(String codiceFiscale) {
-		String jpql = "SELECT w FROM Worker w WHERE w.codiceFiscale = :codiceFiscale";
-		TypedQuery<Worker> query = entityManager.createQuery(jpql, Worker.class);
-		query.setParameter("codiceFiscale", codiceFiscale);
-		try {
-			return query.getSingleResult();
-		} catch (NoResultException ex) {
-			return null;
-		}
-	}
+
 
 }

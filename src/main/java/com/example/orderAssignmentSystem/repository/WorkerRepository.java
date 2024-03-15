@@ -7,7 +7,6 @@ import com.example.orderAssignmentSystem.model.Worker;
 public interface WorkerRepository {
 	public List<Worker> findAll();
 
-	public Worker findByCodiceFiscale(String codiceFiscale);
 
 	public Worker findById(Long workerId);
 

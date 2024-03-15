@@ -1,16 +1,19 @@
 package com.example.orderAssignmentSystem.model;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+
+import com.example.orderAssignmentSystem.model.enums.CategoryEnum;
 
 @Entity
 public class Worker {
@@ -20,8 +23,9 @@ public class Worker {
 	private Long workerId;
 	@Column(name = "name")
 	private String workerName;
-	@Column(name = "codiceFiscale")
-	private String codiceFiscale;
+	@Column(name = "order_category")
+	@Enumerated(EnumType.STRING)
+	private CategoryEnum category;
 
 	@OneToMany
 	@JoinTable(name = "Worker_Order", joinColumns = { @JoinColumn(name = "ord_id") }, inverseJoinColumns = {
@@ -32,9 +36,10 @@ public class Worker {
 
 	}
 
-	public Worker(String workerName, String codiceFiscale) {
+	public Worker(String workerName, CategoryEnum category) {
+		super();
 		this.workerName = workerName;
-		this.codiceFiscale = codiceFiscale;
+		this.category = category;
 	}
 
 	public Long getWorkerId() {
@@ -53,14 +58,6 @@ public class Worker {
 		this.workerName = workerName;
 	}
 
-	public String getCodiceFiscale() {
-		return codiceFiscale;
-	}
-
-	public void setCodiceFiscale(String codiceFiscale) {
-		this.codiceFiscale = codiceFiscale;
-	}
-
 	public List<CustomerOrder> getOrders() {
 		return orders;
 	}
@@ -69,28 +66,12 @@ public class Worker {
 		this.orders = orders;
 	}
 
-	@Override
-	public String toString() {
-		return "Worker [workerName=" + workerName + ", codiceFiscale=" + codiceFiscale + ", orders=" + orders + "]";
+	public CategoryEnum getCategory() {
+		return category;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(codiceFiscale, orders, workerName);
+	public void setCategory(CategoryEnum category) {
+		this.category = category;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Worker other = (Worker) obj;
-		return Objects.equals(codiceFiscale, other.codiceFiscale) && Objects.equals(orders, other.orders)
-				&& Objects.equals(workerName, other.workerName);
-	}
-	
 
 }
