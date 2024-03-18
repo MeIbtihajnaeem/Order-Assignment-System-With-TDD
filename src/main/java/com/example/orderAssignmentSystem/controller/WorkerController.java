@@ -28,6 +28,9 @@ public class WorkerController {
 	public void createNewWorker(Worker worker) {
 		LOGGER.info("Creating a new worker");
 		Objects.requireNonNull(worker, "Worker is null");
+		if (worker.getWorkerId() != null) {
+			throw new IllegalArgumentException("Worker id is not null");
+		}
 		Objects.requireNonNull(worker.getWorkerName(), "Worker name is null");
 		Objects.requireNonNull(worker.getCategory(), "Worker category is null");
 		if (worker.getWorkerName().length() > 20) {

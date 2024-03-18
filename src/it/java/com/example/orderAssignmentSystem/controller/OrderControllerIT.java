@@ -43,7 +43,6 @@ public class OrderControllerIT {
 	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
 	private static final String PERSISTENCE_UNIT_NAME = "myPersistenceUnit";
-	private static final String DEFAULT_WORKER_CodiceFiscale = "9j4RWZ5b0hnqA8eG";
 
 	@Before
 	public void setUp() {

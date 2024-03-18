@@ -53,6 +53,7 @@ public class OrderControllerTest {
 		closeable.close();
 	}
 
+	// For Valid Order List
 	@Test
 	public void testAllOrdersMethodWhenCustomer() {
 		List<CustomerOrder> orders = asList(new CustomerOrder());
@@ -61,6 +62,7 @@ public class OrderControllerTest {
 		verify(orderView).showAllOrders(orders);
 	}
 
+	// For Empty Order List
 	@Test
 	public void testAllOrdersMethodWhenEmptyList() {
 		when(orderRepository.findAll()).thenReturn(Collections.emptyList());
@@ -68,6 +70,7 @@ public class OrderControllerTest {
 		verify(orderView).showAllOrders(Collections.emptyList());
 	}
 
+	// For Null Order List
 	@Test
 	public void testAllOrdersMethodWhenNullList() {
 		when(orderRepository.findAll()).thenReturn(null);
@@ -75,6 +78,7 @@ public class OrderControllerTest {
 		verify(orderView).showAllOrders(null);
 	}
 
+	// For Null Orders
 	@Test
 	public void testCreateNewOrderMethodWhenNullOrders() {
 		try {
@@ -86,6 +90,21 @@ public class OrderControllerTest {
 
 	}
 
+	// Order id should be null while creating new order
+	@Test
+	public void testCreateNewOrderMethodWhenOrderIdNotNull() {
+		CustomerOrder order = new CustomerOrder();
+		order.setOrderId(1l);
+		try {
+			orderController.createNewOrder(order);
+			fail("Expected an IllegalArgumentException to be thrown ");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Order id is not null", e.getMessage());
+		}
+
+	}
+
+	// Order Category is null
 	@Test
 	public void testCreateNewOrderMethodWhenOrderCategoryIsNull() {
 		CustomerOrder order = new CustomerOrder();
@@ -98,6 +117,7 @@ public class OrderControllerTest {
 
 	}
 
+	// Order Description is null
 	@Test
 	public void testCreateNewOrderMethodWhenOrderDescriptionIsNull() {
 		CustomerOrder order = new CustomerOrder();
@@ -110,6 +130,7 @@ public class OrderControllerTest {
 		}
 
 	}
+	// Order Status is null
 
 	@Test
 	public void testCreateNewOrderMethodWhenOrderStatusIsNull() {
@@ -141,6 +162,7 @@ public class OrderControllerTest {
 
 	}
 
+	// When description is empty String
 	@Test
 	public void testCreateNewOrderMethodWhenOrderDescriptionIsEmptyString() {
 		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, "", OrderStatusEnum.PENDING, new Worker());
@@ -152,13 +174,13 @@ public class OrderControllerTest {
 		}
 
 	}
+	// When description is greater then 50
 
 	@Test
 	public void testCreateNewOrderMethodWhenOrderDescriptionIsGreaterThen50Charachters() {
 		// 62 length string
 		final String orderDescription = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING,
-				new Worker());
+		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING, new Worker());
 		try {
 			orderController.createNewOrder(order);
 			fail("Expected an IllegalArgumentException to be thrown ");
@@ -167,20 +189,23 @@ public class OrderControllerTest {
 		}
 
 	}
+	// When description is equal to 50
 
-//	@Test
-//	public void testCreateNewOrderMethodWhenOrderCategoryIsNotPlumber() {
-//
-//		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
-//		CategoryEnum status = CategoryEnum.ELECTRICIAN;
-//		CustomerOrder order = new CustomerOrder(status, orderDescription, OrderStatusEnum.PENDING, new Worker());
-//		try {
-//			orderController.createNewOrder(order);
-//			fail("Expected an IllegalArgumentException to be thrown ");
-//		} catch (IllegalArgumentException e) {
-//			assertEquals("Order Category cannot be " + status + " while creating order", e.getMessage());
-//		}
-//	}
+	@Test
+	public void testCreateNewOrderMethodWhenOrderDescriptionIsExactly50Characters() {
+		// 50 length string
+		final String orderDescription = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX";
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
+		Long workerId = 1l;
+		Worker worker = new Worker();
+		worker.setWorkerId(workerId);
+		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, status, worker);
+		try {
+			orderController.createNewOrder(order);
+		} catch (IllegalArgumentException e) {
+			fail("No IllegalArgumentException should be thrown for exactly 50 characters description");
+		}
+	}
 
 	@Test
 	public void testCreateNewOrderMethodWhenOrderStatusIsNotPending() {
@@ -306,8 +331,8 @@ public class OrderControllerTest {
 		worker.setWorkerId(workerId);
 		worker.setCategory(CategoryEnum.PLUMBER);
 
-		CustomerOrder previousPendingOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription,
-				OrderStatusEnum.COMPLETED, worker);
+		CustomerOrder previousPendingOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.COMPLETED,
+				worker);
 		previousPendingOrder.setOrderId(orderId);
 		worker.setOrders(asList(previousPendingOrder));
 		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, status, worker);
@@ -334,22 +359,6 @@ public class OrderControllerTest {
 		inOrder.verify(orderRepository).save(order);
 		inOrder.verify(orderView).orderAdded(order);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
-	}
-
-	@Test
-	public void testCreateNewOrderMethodWhenOrderDescriptionIsExactly50Characters() {
-		// 50 length string
-		final String orderDescription = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX";
-		OrderStatusEnum status = OrderStatusEnum.PENDING;
-		Long workerId = 1l;
-		Worker worker = new Worker();
-		worker.setWorkerId(workerId);
-		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, status, worker);
-		try {
-			orderController.createNewOrder(order);
-		} catch (IllegalArgumentException e) {
-			fail("No IllegalArgumentException should be thrown for exactly 50 characters description");
-		}
 	}
 
 	@Test
@@ -466,8 +475,7 @@ public class OrderControllerTest {
 	public void testModifyOrderMethodWhenOrderDescriptionIsEmptyString() {
 		Long orderId = 1l;
 
-		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, "", OrderStatusEnum.PENDING,
-				new Worker());
+		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, "", OrderStatusEnum.PENDING, new Worker());
 		try {
 			orderController.modifyOrder(order);
 			fail("Expected an IllegalArgumentException to be thrown ");
@@ -482,8 +490,7 @@ public class OrderControllerTest {
 		final String orderDescription = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		Long orderId = 1l;
 
-		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription,
-				OrderStatusEnum.PENDING, new Worker());
+		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING, new Worker());
 		try {
 			orderController.modifyOrder(order);
 			fail("Expected an IllegalArgumentException to be thrown ");
@@ -499,8 +506,7 @@ public class OrderControllerTest {
 		Worker worker = new Worker();
 		worker.setWorkerId(1l);
 
-		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription,
-				OrderStatusEnum.PENDING, worker);
+		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING, worker);
 		try {
 			orderController.modifyOrder(order);
 		} catch (IllegalArgumentException e) {
@@ -513,8 +519,7 @@ public class OrderControllerTest {
 		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
 		Long orderId = 1l;
 
-		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription,
-				OrderStatusEnum.PENDING, new Worker());
+		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING, new Worker());
 		try {
 			orderController.modifyOrder(order);
 			fail("Expected an NullPointerException to be thrown ");
@@ -529,8 +534,7 @@ public class OrderControllerTest {
 		Worker worker = new Worker();
 		worker.setWorkerId(0l);
 		Long orderId = 1l;
-		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription,
-				OrderStatusEnum.PENDING, worker);
+		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING, worker);
 		try {
 			orderController.modifyOrder(order);
 			fail("Expected an IllegalArgumentException to be thrown ");
@@ -545,8 +549,7 @@ public class OrderControllerTest {
 		Worker worker = new Worker();
 		Long orderId = 1l;
 		worker.setWorkerId(-1l);
-		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription,
-				OrderStatusEnum.PENDING, worker);
+		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING, worker);
 		try {
 			orderController.modifyOrder(order);
 			fail("Expected an IllegalArgumentException to be thrown ");
@@ -575,7 +578,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	public void testModifyOrderMethodWhenOrderIdNotFound() {
+	public void testModifyOrderMethodWhenOldOrderIdNotFound() {
 		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
 		OrderStatusEnum status = OrderStatusEnum.PENDING;
 		Long orderId = 1l;
@@ -585,6 +588,7 @@ public class OrderControllerTest {
 		worker.setWorkerId(workerId);
 
 		CustomerOrder order = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, worker);
+		when(workerRepository.findById(workerId)).thenReturn(worker);
 		when(orderRepository.findById(orderId)).thenReturn(null);
 		orderController.modifyOrder(order);
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
@@ -592,58 +596,158 @@ public class OrderControllerTest {
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
 	}
 
+	// old category Plumber, new category ELECTRICIAN but
+	// old worker category is plumber newWorker is old worker
 	@Test
-	public void testModifyOrderMethodWhenOrderCategoryChangedButWorkerHadDifferentCategory() {
-		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
-
+	public void testModifyOrderMethodWhenCategoryChangedButWorkerNotChanged() {
+		final String orderDescription = "Plumbing Required";
+		Long orderId = 1l;
+		Long workerId = 1l;
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
 		CategoryEnum oldCategory = CategoryEnum.PLUMBER;
 		CategoryEnum newCategory = CategoryEnum.ELECTRICIAN;
-		Long workerId = 1l;
-		Long orderId = 1l;
-
 		Worker worker = new Worker();
 		worker.setWorkerId(workerId);
 		worker.setCategory(oldCategory);
-		CustomerOrder oldOrder = new CustomerOrder(orderId, oldCategory, orderDescription, OrderStatusEnum.PENDING,
-				worker);
-		CustomerOrder updatedOrder = new CustomerOrder(orderId, newCategory, orderDescription, OrderStatusEnum.PENDING,
-				worker);
+
+		// Create old order with old category
+		CustomerOrder oldOrder = new CustomerOrder(orderId, oldCategory, orderDescription, status, worker);
+		// Create new order with new category
+		CustomerOrder newOrder = new CustomerOrder(orderId, newCategory, orderDescription, status, worker); // Worker category remains
+																							// the same
+		// Stub worker repository to return the worker
+		when(workerRepository.findById(workerId)).thenReturn(worker);
+		// Stub order repository to return the old order
+		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
+		// Modify the worker's category to simulate a change
+		worker.setCategory(newCategory);
+		// Call the method under test
+		orderController.modifyOrder(newOrder);
+
+		// Verify that the error is triggered
+		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
+		inOrder.verify(orderView).showError("Worker and order category must change togather", newOrder);
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
+
+	// old category Plumber, new category Plumber but
+	// old worker category is Plumber, newWorker category is ELECTRICIAN
+	@Test
+	public void testModifyOrderMethodWhenNewWorkerHasPlumbingCategoryButOrderHasElectrcianCategory() {
+		final String orderDescription = "Pluming Required";
+		Long orderId = 1l;
+		Long workerId = 1l;
+		Long newWorkerId = 2l;
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
+		CategoryEnum oldCategory = CategoryEnum.PLUMBER;
+		CategoryEnum newCategory = CategoryEnum.ELECTRICIAN;
+		Worker oldWorker = new Worker();
+		oldWorker.setWorkerId(workerId);
+		oldWorker.setCategory(oldCategory);
+
+		Worker newWorker = new Worker();
+		newWorker.setWorkerId(newWorkerId);
+		newWorker.setCategory(newCategory);
+
+		CustomerOrder oldOrder = new CustomerOrder(orderId, oldCategory, orderDescription, status, oldWorker);
+		CustomerOrder newOrder = new CustomerOrder(orderId, oldCategory, orderDescription, status, newWorker);
+		when(workerRepository.findById(newWorkerId)).thenReturn(newWorker);
+		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
+		orderController.modifyOrder(newOrder);
+		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
+		inOrder.verify(orderView).showError("Worker and order category must change togather", newOrder);
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
+
+	@Test
+	public void testModifyOrderMethodWhenOrderNewWorkerHasPendingOrders() {
+		final String orderDescription = "old order description";
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
+
+		Long oldWorkerId = 1l;
+
+		Worker oldWorker = new Worker("Alic", CategoryEnum.PLUMBER);
+		oldWorker.setWorkerId(oldWorkerId);
+
+		Long newWorkerId = 2l;
+
+		Worker newWorker = new Worker("Bob", CategoryEnum.PLUMBER);
+		newWorker.setWorkerId(newWorkerId);
+
+		Long orderId = 1l;
+		CustomerOrder previousPendingOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.PENDING,
+				newWorker);
+		previousPendingOrder.setOrderId(orderId);
+		newWorker.setOrders(asList(previousPendingOrder));
+
+		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, oldWorker);
+		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, newWorker);
 
 		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
-		when(workerRepository.findById(workerId)).thenReturn(worker);
+		when(workerRepository.findById(newWorkerId)).thenReturn(newWorker);
 		orderController.modifyOrder(updatedOrder);
+
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
-		inOrder.verify(orderView).showError("Cannot assign orders to this worker because it is of different category",
+		inOrder.verify(orderView).showError("Cannot assign orders to this worker because it is pending orders",
 				updatedOrder);
 		verifyNoMoreInteractions(ignoreStubs(orderRepository));
 	}
 
 	@Test
-	public void testModifyOrderMethodWhenOrderCategoryChanged() {
-		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
+	public void testModifyOrderMethodWhenOrderNewWorkerHasNullPendingOrders() {
+		final String orderDescription = "old order description";
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
 
-		CategoryEnum oldCategory = CategoryEnum.PLUMBER;
-		CategoryEnum newCategory = CategoryEnum.ELECTRICIAN;
-		Long workerId = 1l;
+		Long oldWorkerId = 1l;
+
+		Worker oldWorker = new Worker("Alic", CategoryEnum.PLUMBER);
+		oldWorker.setWorkerId(oldWorkerId);
+
+		Long newWorkerId = 2l;
+
+		Worker newWorker = new Worker("Bob", CategoryEnum.PLUMBER);
+		newWorker.setWorkerId(newWorkerId);
+
 		Long orderId = 1l;
 
-		Worker oldWorker = new Worker();
-		oldWorker.setWorkerId(workerId);
-		oldWorker.setCategory(newCategory);
-
-		Worker newWorker = new Worker();
-		newWorker.setWorkerId(2l);
-		newWorker.setCategory(newCategory);
-
-		CustomerOrder oldOrder = new CustomerOrder(orderId, oldCategory, orderDescription, OrderStatusEnum.PENDING,
-				oldWorker);
-		CustomerOrder updatedOrder = new CustomerOrder(orderId, newCategory, orderDescription, OrderStatusEnum.PENDING,
-				newWorker);
+		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, oldWorker);
+		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, newWorker);
 
 		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
-		when(workerRepository.findById(2l)).thenReturn(newWorker);
+		when(workerRepository.findById(newWorkerId)).thenReturn(newWorker);
 		orderController.modifyOrder(updatedOrder);
+		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
+		inOrder.verify(orderRepository).save(updatedOrder);
+		inOrder.verify(orderView).orderModified(updatedOrder);
+		verifyNoMoreInteractions(ignoreStubs(orderRepository));
+	}
 
+	@Test
+	public void testModifyOrderMethodWhenOrderNewWorkerHasNoPendingOrders() {
+		final String orderDescription = "old order description";
+		OrderStatusEnum status = OrderStatusEnum.PENDING;
+
+		Long oldWorkerId = 1l;
+
+		Worker oldWorker = new Worker("Alic", CategoryEnum.PLUMBER);
+		oldWorker.setWorkerId(oldWorkerId);
+
+		Long newWorkerId = 2l;
+
+		Worker newWorker = new Worker("Bob", CategoryEnum.PLUMBER);
+		newWorker.setWorkerId(newWorkerId);
+
+		Long orderId = 1l;
+		CustomerOrder previousPendingOrder = new CustomerOrder(CategoryEnum.PLUMBER, orderDescription, OrderStatusEnum.CANCELED,
+				newWorker);
+		previousPendingOrder.setOrderId(orderId);
+		newWorker.setOrders(asList(previousPendingOrder));
+		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, oldWorker);
+		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, newWorker);
+
+		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
+		when(workerRepository.findById(newWorkerId)).thenReturn(newWorker);
+		orderController.modifyOrder(updatedOrder);
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
 		inOrder.verify(orderRepository).save(updatedOrder);
 		inOrder.verify(orderView).orderModified(updatedOrder);
@@ -662,10 +766,9 @@ public class OrderControllerTest {
 		worker.setWorkerId(workerId);
 		worker.setCategory(CategoryEnum.PLUMBER);
 
-		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, oldOrderDescription,
-				OrderStatusEnum.PENDING, worker);
-		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, newOrderDescription,
-				OrderStatusEnum.PENDING, worker);
+		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, oldOrderDescription, OrderStatusEnum.PENDING, worker);
+		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, newOrderDescription, OrderStatusEnum.PENDING,
+				worker);
 
 		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
 		when(workerRepository.findById(workerId)).thenReturn(worker);
@@ -690,65 +793,10 @@ public class OrderControllerTest {
 		worker.setWorkerId(workerId);
 		worker.setCategory(CategoryEnum.PLUMBER);
 		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, oldStatus, worker);
-		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, newStatus,
-				worker);
+		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, newStatus, worker);
 
 		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
 		when(workerRepository.findById(workerId)).thenReturn(worker);
-		orderController.modifyOrder(updatedOrder);
-
-		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
-		inOrder.verify(orderRepository).save(updatedOrder);
-		inOrder.verify(orderView).orderModified(updatedOrder);
-		verifyNoMoreInteractions(ignoreStubs(orderRepository));
-	}
-
-	@Test
-	public void testModifyOrderMethodWhenWorkerFoundButWithDifferentCategory() {
-		final String orderDescription = "abcdefghijklmnopqrstuvwxyzasdf123";
-		Long orderId = 1l;
-
-		OrderStatusEnum status = OrderStatusEnum.PENDING;
-		CategoryEnum workerCategory = CategoryEnum.PLUMBER;
-		CategoryEnum orderCategory = CategoryEnum.ELECTRICIAN;
-		Long workerId = 1l;
-		Worker worker = new Worker();
-		worker.setWorkerId(workerId);
-		worker.setCategory(workerCategory);
-		CustomerOrder order = new CustomerOrder(orderId, orderCategory, orderDescription, status, worker);
-		when(orderRepository.findById(orderId)).thenReturn(order);
-		when(workerRepository.findById(workerId)).thenReturn(worker);
-		orderController.modifyOrder(order);
-		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);
-		inOrder.verify(orderView).showError("Cannot assign orders to this worker because it is of different category",
-				order);
-		verifyNoMoreInteractions(ignoreStubs(orderRepository));
-	}
-
-	@Test
-	public void testModifyOrderMethodWhenOrderWorkerChanged() {
-		final String orderDescription = "old order description";
-		OrderStatusEnum status = OrderStatusEnum.PENDING;
-
-		Long oldWorkerId = 1l;
-
-		Worker oldWorker = new Worker("Alic", CategoryEnum.PLUMBER);
-		oldWorker.setWorkerId(oldWorkerId);
-
-		Long newWorkerId = 2l;
-
-		Worker newWorker = new Worker("Bob", CategoryEnum.ELECTRICIAN);
-		newWorker.setWorkerId(newWorkerId);
-		newWorker.setCategory(CategoryEnum.PLUMBER);
-
-		Long orderId = 1l;
-
-		CustomerOrder oldOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status, oldWorker);
-		CustomerOrder updatedOrder = new CustomerOrder(orderId, CategoryEnum.PLUMBER, orderDescription, status,
-				newWorker);
-
-		when(orderRepository.findById(orderId)).thenReturn(oldOrder);
-		when(workerRepository.findById(newWorkerId)).thenReturn(newWorker);
 		orderController.modifyOrder(updatedOrder);
 
 		InOrder inOrder = inOrder(orderRepository, orderView, workerRepository);

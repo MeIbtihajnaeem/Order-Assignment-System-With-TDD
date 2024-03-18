@@ -19,13 +19,17 @@ public class CustomerOrder {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId;
+
 	@Column(name = "order_category")
 	@Enumerated(EnumType.STRING)
 	private CategoryEnum category;
+
 	@Column(name = "description")
 	private String orderDescription;
+
 	@OneToOne
 	private Worker worker;
+
 	@Column(name = "order_status")
 	@Enumerated(EnumType.STRING)
 	private OrderStatusEnum orderStatus;
