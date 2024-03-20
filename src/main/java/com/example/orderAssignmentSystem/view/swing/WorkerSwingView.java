@@ -30,7 +30,7 @@ public class WorkerSwingView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					OrderSwingView frame = new OrderSwingView();
+					WorkerSwingView frame = new WorkerSwingView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

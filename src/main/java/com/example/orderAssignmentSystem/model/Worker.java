@@ -74,4 +74,9 @@ public class Worker {
 		this.category = category;
 	}
 
+	@Override
+	public String toString() {
+		return workerId + ") " + workerName + "," + category.toString();
+	}
+
 }
