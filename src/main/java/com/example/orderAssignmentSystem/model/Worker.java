@@ -1,6 +1,7 @@
 package com.example.orderAssignmentSystem.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,6 +78,24 @@ public class Worker {
 	@Override
 	public String toString() {
 		return workerId + ") " + workerName + "," + category.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(category, orders, workerId, workerName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Worker other = (Worker) obj;
+		return category == other.category && Objects.equals(orders, other.orders)
+				&& Objects.equals(workerId, other.workerId) && Objects.equals(workerName, other.workerName);
 	}
 
 }

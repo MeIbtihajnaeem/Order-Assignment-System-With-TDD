@@ -43,6 +43,7 @@ public class OrderSwingView extends JFrame implements OrderView {
 	private DefaultComboBoxModel<Worker> defaultWorkers;
 	private JComboBox<CategoryEnum> categoryComboBox;
 	private JList<CustomerOrder> orderListLayout;
+	
 	private DefaultListModel<CustomerOrder> defaultOrders;
 
 	private JComboBox<OrderStatusEnum> statusComboBox;
@@ -234,7 +235,7 @@ public class OrderSwingView extends JFrame implements OrderView {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new EmptyBorder(0, 0, 0, 0));
-		panel.setBackground(Color.WHITE); // Set panel background color
+//		panel.setBackground(Color.WHITE); // Set panel background color
 		panel.setPreferredSize(new Dimension(200, 50)); // Set panel size
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.insets = new Insets(0, 0, 5, 0);
