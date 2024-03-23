@@ -1,4 +1,4 @@
-name: JAVA CI with Maven in Linux
+name: JAVA CI Uni tests with Maven in Windows & MacOS
 on:
  push:
  pull_request:

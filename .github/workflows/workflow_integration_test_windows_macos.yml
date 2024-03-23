@@ -1,4 +1,4 @@
-name: JAVA IT with Maven in Linux
+name: JAVA IT with Maven in Windows and Macos
 
 on:
   push:
