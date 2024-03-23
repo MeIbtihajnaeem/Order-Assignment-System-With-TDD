@@ -77,7 +77,6 @@ public class WorkerControllerIT {
 	public void testNewWorker() {
 		Worker worker = new Worker("bob", DEFAULT_WORKER_Category);
 		workerController.createNewWorker(worker);
-
 		verify(workerView).workerAdded(worker);
 	}
 

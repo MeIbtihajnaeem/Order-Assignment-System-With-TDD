@@ -43,7 +43,39 @@ public class OrderController {
 
 	public void createNewOrder(CustomerOrder order) {
 		LOGGER.info("Creating a new order");
-		_createMethodInputValidator(order);
+//		 _createMethodInputValidator(order);
+
+		Objects.requireNonNull(order, String.format(NULL_ERROR, "Order"));
+		if (order.getOrderId() != null) {
+			throw new IllegalArgumentException("Order id is not null");
+		}
+		Objects.requireNonNull(order.getCategory(), String.format(NULL_ERROR, "Category"));
+		Objects.requireNonNull(order.getOrderDescription(), String.format(NULL_ERROR, "Order description"));
+		Objects.requireNonNull(order.getOrderStatus(), String.format(NULL_ERROR, "Order status"));
+		Objects.requireNonNull(order.getWorker(), String.format(NULL_ERROR, "Worker"));
+
+		if (order.getOrderDescription().isEmpty()) {
+			LOGGER.error(DESCRIPTION_EMPTY_ERROR);
+			throw new IllegalArgumentException(DESCRIPTION_EMPTY_ERROR);
+		}
+
+		if (order.getOrderDescription().length() > 50) {
+			LOGGER.error(DESCRIPTION_LENGTH_ERROR);
+			throw new IllegalArgumentException(DESCRIPTION_LENGTH_ERROR);
+		}
+		if (order.getOrderStatus() != OrderStatusEnum.PENDING) {
+			LOGGER.error(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
+//			throw new IllegalArgumentException(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
+			orderView.showError(String.format(ORDER_ERROR, "Status", order.getOrderStatus()), order);
+			return;
+		}
+		Objects.requireNonNull(order.getWorker().getWorkerId(), String.format(NULL_ERROR, "Worker ID"));
+
+		if (order.getWorker().getWorkerId() <= 0) {
+			LOGGER.error(WORKER_POSITIVE_ERROR);
+			throw new IllegalArgumentException(WORKER_POSITIVE_ERROR);
+		}
+
 		Worker existingWorker = workerRepository.findById(order.getWorker().getWorkerId());
 		if (existingWorker == null) {
 			LOGGER.error(String.format(NO_WORKER_FOUND, "Worker", order.getWorker().getWorkerId()));
@@ -56,11 +88,11 @@ public class OrderController {
 			return;
 		}
 		if (existingWorker.getOrders() == null) {
-			orderRepository.save(order);
+			order = orderRepository.save(order);
 			orderView.orderAdded(order);
 		} else {
 			if (!_checkOrdersStatus(existingWorker.getOrders())) {
-				orderRepository.save(order);
+				order = orderRepository.save(order);
 				orderView.orderAdded(order);
 			} else {
 				LOGGER.error(ASSIGN_ERROR);
@@ -119,11 +151,11 @@ public class OrderController {
 			return;
 		}
 		if (existingWorker.getOrders() == null) {
-			orderRepository.save(order);
+			order = orderRepository.save(order);
 			orderView.orderModified(order);
 		} else {
 			if (!_checkOrdersStatus(existingWorker.getOrders())) {
-				orderRepository.save(order);
+				order = orderRepository.save(order);
 				orderView.orderModified(order);
 			} else {
 				LOGGER.error("Cannot assign orders to this worker because it is pending orders");
@@ -141,7 +173,7 @@ public class OrderController {
 		}
 		CustomerOrder order = orderRepository.findById(orderId);
 		if (order == null) {
-			orderView.showErrorOrderNotFound(String.format(NO_WORKER_FOUND, "Order", orderId), order);
+			orderView.showError(String.format(NO_WORKER_FOUND, "Order", orderId), order);
 			return;
 		}
 		orderRepository.delete(order);
@@ -157,36 +189,38 @@ public class OrderController {
 		return false;
 	}
 
-	private void _createMethodInputValidator(CustomerOrder order) {
-		Objects.requireNonNull(order, String.format(NULL_ERROR, "Order"));
-		if (order.getOrderId() != null) {
-			throw new IllegalArgumentException("Order id is not null");
-		}
-		Objects.requireNonNull(order.getCategory(), String.format(NULL_ERROR, "Category"));
-		Objects.requireNonNull(order.getOrderDescription(), String.format(NULL_ERROR, "Order description"));
-		Objects.requireNonNull(order.getOrderStatus(), String.format(NULL_ERROR, "Order status"));
-		Objects.requireNonNull(order.getWorker(), String.format(NULL_ERROR, "Worker"));
-
-		if (order.getOrderDescription().isEmpty()) {
-			LOGGER.error(DESCRIPTION_EMPTY_ERROR);
-			throw new IllegalArgumentException(DESCRIPTION_EMPTY_ERROR);
-		}
-
-		if (order.getOrderDescription().length() > 50) {
-			LOGGER.error(DESCRIPTION_LENGTH_ERROR);
-			throw new IllegalArgumentException(DESCRIPTION_LENGTH_ERROR);
-		}
-		if (order.getOrderStatus() != OrderStatusEnum.PENDING) {
-			LOGGER.error(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
-			throw new IllegalArgumentException(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
-		}
-		Objects.requireNonNull(order.getWorker().getWorkerId(), String.format(NULL_ERROR, "Worker ID"));
-
-		if (order.getWorker().getWorkerId() <= 0) {
-			LOGGER.error(WORKER_POSITIVE_ERROR);
-			throw new IllegalArgumentException(WORKER_POSITIVE_ERROR);
-		}
-
-	}
+//	private void _createMethodInputValidator(CustomerOrder order) {
+//		Objects.requireNonNull(order, String.format(NULL_ERROR, "Order"));
+//		if (order.getOrderId() != null) {
+//			throw new IllegalArgumentException("Order id is not null");
+//		}
+//		Objects.requireNonNull(order.getCategory(), String.format(NULL_ERROR, "Category"));
+//		Objects.requireNonNull(order.getOrderDescription(), String.format(NULL_ERROR, "Order description"));
+//		Objects.requireNonNull(order.getOrderStatus(), String.format(NULL_ERROR, "Order status"));
+//		Objects.requireNonNull(order.getWorker(), String.format(NULL_ERROR, "Worker"));
+//
+//		if (order.getOrderDescription().isEmpty()) {
+//			LOGGER.error(DESCRIPTION_EMPTY_ERROR);
+//			throw new IllegalArgumentException(DESCRIPTION_EMPTY_ERROR);
+//		}
+//
+//		if (order.getOrderDescription().length() > 50) {
+//			LOGGER.error(DESCRIPTION_LENGTH_ERROR);
+//			throw new IllegalArgumentException(DESCRIPTION_LENGTH_ERROR);
+//		}
+//		if (order.getOrderStatus() != OrderStatusEnum.PENDING) {
+//			LOGGER.error(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
+////			throw new IllegalArgumentException(String.format(ORDER_ERROR, "Status", order.getOrderStatus()));
+//			orderView.showError(String.format(ORDER_ERROR, "Status", order.getOrderStatus()), order);
+//			return;
+//		}
+//		Objects.requireNonNull(order.getWorker().getWorkerId(), String.format(NULL_ERROR, "Worker ID"));
+//
+//		if (order.getWorker().getWorkerId() <= 0) {
+//			LOGGER.error(WORKER_POSITIVE_ERROR);
+//			throw new IllegalArgumentException(WORKER_POSITIVE_ERROR);
+//		}
+//
+//	}
 
 }

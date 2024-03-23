@@ -34,10 +34,13 @@ public class WorkerController {
 		Objects.requireNonNull(worker.getWorkerName(), "Worker name is null");
 		Objects.requireNonNull(worker.getCategory(), "Worker category is null");
 		if (worker.getWorkerName().length() > 20) {
-			throw new IllegalArgumentException("Worker name cannot be greater than 20");
+//			throw new IllegalArgumentException("Worker name cannot be greater than 20");
+			LOGGER.error("Worker name cannot be greater than 20");
+			workerView.showError("Worker name cannot be greater than 20", worker);
+			return;
 		}
 
-		workerRepository.save(worker);
+		worker = workerRepository.save(worker);
 		workerView.workerAdded(worker);
 		LOGGER.info("New worker created: {}", worker);
 	}
@@ -51,7 +54,7 @@ public class WorkerController {
 		Worker workerExists = workerRepository.findById(workerId);
 		if (workerExists == null) {
 			LOGGER.error("No Worker found with id {}", workerId);
-			workerView.showErrorWorkerNotFound("No Worker found with id " + workerId, workerExists);
+			workerView.showError("No Worker found with id " + workerId, workerExists);
 			return;
 		}
 		if (workerExists.getOrders() != null) {

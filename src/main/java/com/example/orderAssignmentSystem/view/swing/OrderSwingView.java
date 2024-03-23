@@ -43,7 +43,7 @@ public class OrderSwingView extends JFrame implements OrderView {
 	private DefaultComboBoxModel<Worker> defaultWorkers;
 	private JComboBox<CategoryEnum> categoryComboBox;
 	private JList<CustomerOrder> orderListLayout;
-	
+
 	private DefaultListModel<CustomerOrder> defaultOrders;
 
 	private JComboBox<OrderStatusEnum> statusComboBox;
@@ -354,8 +354,10 @@ public class OrderSwingView extends JFrame implements OrderView {
 
 		btnUpdate.setEnabled(!isOrderIdEmpty && !isOrderDescriptionEmpty && isCategorySelected && isWorkerSelected
 				&& isStatusSelected);
-		btnAdd.setEnabled(isOrderIdEmpty && !isOrderDescriptionEmpty && isCategorySelected && isWorkerSelected
-				&& statusComboBox.getSelectedItem() == OrderStatusEnum.PENDING);
+//		btnAdd.setEnabled(isOrderIdEmpty && !isOrderDescriptionEmpty && isCategorySelected && isWorkerSelected
+//				&& statusComboBox.getSelectedItem() == OrderStatusEnum.PENDING);
+
+		btnAdd.setEnabled(isOrderIdEmpty && !isOrderDescriptionEmpty && isCategorySelected && isWorkerSelected);
 	}
 
 	@Override
