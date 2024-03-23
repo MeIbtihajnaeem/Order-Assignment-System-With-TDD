@@ -1,6 +1,9 @@
 package com.example.orderAssignmentSystem.view;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -104,7 +107,9 @@ public class OrderSwingViewIT extends AssertJSwingJUnitTestCase {
 
 		window.button(JButtonMatcher.withName("btnAdd")).click();
 		CustomerOrder order = orderRepository.findAll().get(0);
-		assertThat(window.list().contents()).containsExactly(order.toString());
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+			assertThat(window.list().contents()).containsExactly(order.toString());
+		});
 	}
 
 	@Test
@@ -131,7 +136,9 @@ public class OrderSwingViewIT extends AssertJSwingJUnitTestCase {
 
 		window.button(JButtonMatcher.withName("btnUpdate")).click();
 		CustomerOrder order = orderRepository.findById(oldOrder.getOrderId());
-		assertThat(window.list().contents()).containsExactly(order.toString());
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+			assertThat(window.list().contents()).containsExactly(order.toString());
+		});
 	}
 
 	@Test
@@ -196,7 +203,9 @@ public class OrderSwingViewIT extends AssertJSwingJUnitTestCase {
 
 		window.list().selectItem(0);
 		window.button(JButtonMatcher.withName("btnDelete")).click();
-		assertThat(window.list().contents()).isEmpty();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+			assertThat(window.list().contents()).isEmpty();
+		});
 	}
 
 	@Test

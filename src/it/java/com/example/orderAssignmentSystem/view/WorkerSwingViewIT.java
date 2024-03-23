@@ -21,6 +21,9 @@ import com.example.orderAssignmentSystem.model.enums.CategoryEnum;
 import com.example.orderAssignmentSystem.repository.WorkerRepository;
 import com.example.orderAssignmentSystem.repository.postgresql.WorkerDatabaseRepository;
 import com.example.orderAssignmentSystem.view.swing.WorkerSwingView;
+import static org.awaitility.Awaitility.*;
+
+import java.util.concurrent.TimeUnit;
 
 @RunWith(GUITestRunner.class)
 public class WorkerSwingViewIT extends AssertJSwingJUnitTestCase {
@@ -81,7 +84,9 @@ public class WorkerSwingViewIT extends AssertJSwingJUnitTestCase {
 		window.comboBox("workerCategoryComboBox").selectItem(category.toString());
 		window.button(JButtonMatcher.withName("btnAdd")).click();
 		Worker createdWorker = workerRepository.findAll().get(0);
-		assertThat(window.list().contents()).containsExactly(createdWorker.toString());
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+			assertThat(window.list().contents()).containsExactly(createdWorker.toString());
+		});
 	}
 
 	@Test
@@ -106,7 +111,9 @@ public class WorkerSwingViewIT extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> workerController.createNewWorker(worker));
 		window.list().selectItem(0);
 		window.button(JButtonMatcher.withName("btnDelete")).click();
-		assertThat(window.list().contents()).isEmpty();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+			assertThat(window.list().contents()).isEmpty();
+		});
 
 	}
 
