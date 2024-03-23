@@ -77,6 +77,8 @@ public class WorkerControllerIT {
 	public void testNewWorker() {
 		Worker worker = new Worker("bob", DEFAULT_WORKER_Category);
 		workerController.createNewWorker(worker);
+		Long workerId = workerRepository.findAll().get(0).getWorkerId();
+		worker.setWorkerId(workerId);
 		verify(workerView).workerAdded(worker);
 	}
 

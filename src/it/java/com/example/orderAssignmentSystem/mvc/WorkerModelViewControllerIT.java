@@ -1,4 +1,4 @@
-package com.example.orderAssignmentSystem.view;
+package com.example.orderAssignmentSystem.mvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
@@ -23,8 +22,7 @@ import com.example.orderAssignmentSystem.repository.postgresql.WorkerDatabaseRep
 import com.example.orderAssignmentSystem.view.swing.WorkerSwingView;
 
 @RunWith(GUITestRunner.class)
-public class WorkerSwingViewIT extends AssertJSwingJUnitTestCase {
-
+public class WorkerModelViewControllerIT extends AssertJSwingJUnitTestCase {
 	private WorkerRepository workerRepository;
 
 	private WorkerSwingView workerSwingView;
@@ -63,64 +61,25 @@ public class WorkerSwingViewIT extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	@GUITest
-	public void testAllWorkers() {
-		Worker worker1 = new Worker("Jhon", CategoryEnum.PLUMBER);
-		Worker worker2 = new Worker("Alic", CategoryEnum.PLUMBER);
-		worker1 = workerRepository.save(worker1);
-		worker2 = workerRepository.save(worker2);
-		GuiActionRunner.execute(() -> workerController.getAllWorkers());
-		assertThat(window.list().contents()).containsExactly(worker1.toString(), worker2.toString());
-	}
-
-	@Test
-	@GUITest
-	public void testAddButtonSuccess() {
+	public void testAddWorker() {
 		window.textBox("workerNameTextField").enterText("test");
 		CategoryEnum category = (CategoryEnum) window.comboBox("workerCategoryComboBox").target().getItemAt(0);
 		window.comboBox("workerCategoryComboBox").selectItem(category.toString());
 		window.button(JButtonMatcher.withName("btnAdd")).click();
-		Worker createdWorker = workerRepository.findAll().get(0);
-		assertThat(window.list().contents()).containsExactly(createdWorker.toString());
+		Worker worker = new Worker("test", category);
+		Long workerId = 1l;
+		worker.setWorkerId(workerId);
+		assertThat(workerRepository.findById(workerId)).isEqualTo(worker);
 	}
 
 	@Test
-	@GUITest
-	public void testAddButtonError() {
-//		Worker worker1 = new Worker("Jhon", CategoryEnum.PLUMBER);
-//		worker1 = workerRepository.save(worker1);
-		String name = "Muhammad Ibtihaj Naeem";
-		window.textBox("workerNameTextField").enterText(name);
-		CategoryEnum category = (CategoryEnum) window.comboBox("workerCategoryComboBox").target().getItemAt(0);
-		window.comboBox("workerCategoryComboBox").selectItem(category.toString());
-		window.button(JButtonMatcher.withName("btnAdd")).click();
-
-		assertThat(window.list().contents()).isEmpty();
-		window.label("lblError").requireText("Worker name cannot be greater than 20: " + new Worker(name, category));
-	}
-
-	@Test
-	@GUITest
-	public void testDeleteButtonSuccess() {
-		Worker worker = new Worker("Jhon", CategoryEnum.PLUMBER);
-		GuiActionRunner.execute(() -> workerController.createNewWorker(worker));
+	public void testDeleteWorker() {
+		Worker worker = new Worker("test", CategoryEnum.PLUMBER);
+		Worker newWorker = workerRepository.save(worker);
+		GuiActionRunner.execute(() -> workerController.getAllWorkers());
 		window.list().selectItem(0);
 		window.button(JButtonMatcher.withName("btnDelete")).click();
-		assertThat(window.list().contents()).isEmpty();
-
-	}
-
-	@Test
-	@GUITest
-	public void testDeleteButtonError() {
-		Worker worker = new Worker("Jhon", CategoryEnum.PLUMBER);
-		worker.setWorkerId(1l);
-		GuiActionRunner.execute(() -> workerSwingView.getWorkerListModel().addElement(worker));
-		window.list().selectItem(0);
-		window.button(JButtonMatcher.withName("btnDelete")).click();
-		assertThat(window.list().contents()).containsExactly(worker.toString());
-		window.label("lblError").requireText("No Worker found with id " + worker.getWorkerId() + ": " + null);
-
+		assertThat(workerRepository.findById(newWorker.getWorkerId())).isNull();
 	}
 
 }

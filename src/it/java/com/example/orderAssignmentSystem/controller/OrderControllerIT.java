@@ -78,6 +78,8 @@ public class OrderControllerIT {
 		CustomerOrder order = new CustomerOrder(CategoryEnum.PLUMBER, "Change pipe", OrderStatusEnum.PENDING,
 				newWorker);
 		orderController.createNewOrder(order);
+		Long orderId = orderRepository.findAll().get(0).getOrderId();
+		order.setOrderId(orderId);
 		verify(orderView).orderAdded(order);
 	}
 

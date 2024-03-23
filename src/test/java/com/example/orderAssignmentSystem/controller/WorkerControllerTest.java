@@ -109,12 +109,17 @@ public class WorkerControllerTest {
 		Worker worker = new Worker();
 		worker.setWorkerName("Matteo Moretti Matteo Moretti");
 		worker.setCategory(CategoryEnum.PLUMBER);
-		try {
-			workerController.createNewWorker(worker);
-			fail("Expected an IllegalArgumentException to be thrown ");
-		} catch (IllegalArgumentException e) {
-			assertEquals("Worker name cannot be greater than 20", e.getMessage());
-		}
+//		try {
+//			workerController.createNewWorker(worker);
+//			fail("Expected an IllegalArgumentException to be thrown ");
+//		} catch (IllegalArgumentException e) {
+//			assertEquals("Worker name cannot be greater than 20", e.getMessage());
+//		}
+		workerController.createNewWorker(worker);
+
+		InOrder inOrder = inOrder(workerView, workerRepository);
+		inOrder.verify(workerView).showError("Worker name cannot be greater than 20", worker);
+		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 
 	@Test
@@ -146,10 +151,14 @@ public class WorkerControllerTest {
 		Worker worker = new Worker();
 		worker.setWorkerName("Matteo Moretti");
 		worker.setCategory(CategoryEnum.PLUMBER);
+		Worker newWorker = new Worker("Matteo Moretti", CategoryEnum.PLUMBER);
+		newWorker.setWorkerId(1l);
+		when(workerRepository.save(worker)).thenReturn(newWorker);
 		workerController.createNewWorker(worker);
+
 		InOrder inOrder = inOrder(workerView, workerRepository);
 		inOrder.verify(workerRepository).save(worker);
-		inOrder.verify(workerView).workerAdded(worker);
+		inOrder.verify(workerView).workerAdded(newWorker);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 
@@ -206,7 +215,7 @@ public class WorkerControllerTest {
 		when(workerRepository.findById(workerId)).thenReturn(null);
 		workerController.deleteWorker(workerId);
 		InOrder inOrder = inOrder(workerView, workerRepository);
-		inOrder.verify(workerView).showErrorWorkerNotFound("No Worker found with id " + workerId, null);
+		inOrder.verify(workerView).showError("No Worker found with id " + workerId, null);
 		verifyNoMoreInteractions(ignoreStubs(workerRepository));
 	}
 

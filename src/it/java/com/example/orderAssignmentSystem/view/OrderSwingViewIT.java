@@ -67,6 +67,11 @@ public class OrderSwingViewIT extends AssertJSwingJUnitTestCase {
 
 	}
 
+	@Override
+	protected void onTearDown() {
+		entityManager.close();
+	}
+
 	@Test
 	@GUITest
 	public void testAllOrders() {
@@ -148,6 +153,34 @@ public class OrderSwingViewIT extends AssertJSwingJUnitTestCase {
 		assertThat(window.list().contents()).isEmpty();
 
 		window.label("lblError").requireText("Order Status cannot be COMPLETED while creating order: "
+				+ new CustomerOrder(category, "test", status, newWorker));
+	}
+
+	@Test
+	@GUITest
+	public void testUpdateButtonError() {
+
+		Worker worker1 = new Worker("Jhon", CategoryEnum.PLUMBER);
+		Worker newWorker = workerRepository.save(worker1);
+		CustomerOrder oldOrder = new CustomerOrder(CategoryEnum.PLUMBER, "description", OrderStatusEnum.PENDING,
+				newWorker);
+		Long orderId = orderRepository.save(oldOrder).getOrderId();
+		oldOrder.setOrderId(orderId);
+
+		window.textBox("orderIdTextField").enterText(oldOrder.getOrderId().toString());
+		window.textBox("orderDescriptionTextField").enterText("test");
+		CategoryEnum category = (CategoryEnum) window.comboBox("categoryComboBox").target().getItemAt(1);
+		window.comboBox("categoryComboBox").selectItem(category.toString());
+
+		OrderStatusEnum status = (OrderStatusEnum) window.comboBox("statusComboBox").target().getItemAt(1);
+		window.comboBox("statusComboBox").selectItem(status.toString());
+
+		GuiActionRunner.execute(() -> orderSwingView.getDefaultWorkers().addElement(newWorker));
+		GuiActionRunner.execute(() -> orderSwingView.getDefaultOrders().addElement(oldOrder));
+
+		window.button(JButtonMatcher.withName("btnUpdate")).click();
+
+		window.label("lblError").requireText("Worker and order category must change togather: "
 				+ new CustomerOrder(category, "test", status, newWorker));
 	}
 

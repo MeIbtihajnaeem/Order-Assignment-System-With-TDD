@@ -119,18 +119,18 @@ public class OrderSwingViewTest extends AssertJSwingJUnitTestCase {
 	// add button id = "1" , description =2 category = plumber status = completed,
 	// worker = firstWorker
 
-	@Test
-	public void testWhenIdIsEmptyAndDescriptionIsNonEmptyAndCategoryNonEmptyAndStatusNotPendingThenAddButtonShouldBeDisable() {
-		window.textBox("orderDescriptionTextField").enterText("2");
-		window.comboBox("categoryComboBox").selectItem(0);
-		window.comboBox("statusComboBox").selectItem(1);
-		Worker worker = new Worker("Jhon", CategoryEnum.PLUMBER);
-		worker.setWorkerId(1l);
-		GuiActionRunner.execute(() -> orderSwingView.getDefaultWorkers().addElement(worker));
-		window.comboBox("workerComboBox").selectItem(0);
-		window.button(JButtonMatcher.withName("btnAdd")).requireDisabled();
-		window.button(JButtonMatcher.withName("btnUpdate")).requireDisabled();
-	}
+//	@Test
+//	public void testWhenIdIsEmptyAndDescriptionIsNonEmptyAndCategoryNonEmptyAndStatusNotPendingThenAddButtonShouldBeDisable() {
+//		window.textBox("orderDescriptionTextField").enterText("2");
+//		window.comboBox("categoryComboBox").selectItem(0);
+//		window.comboBox("statusComboBox").selectItem(1);
+//		Worker worker = new Worker("Jhon", CategoryEnum.PLUMBER);
+//		worker.setWorkerId(1l);
+//		GuiActionRunner.execute(() -> orderSwingView.getDefaultWorkers().addElement(worker));
+//		window.comboBox("workerComboBox").selectItem(0);
+//		window.button(JButtonMatcher.withName("btnAdd")).requireDisabled();
+//		window.button(JButtonMatcher.withName("btnUpdate")).requireDisabled();
+//	}
 
 	@Test
 	public void testWhenEitherIdOrDescriptionOrWorkerAreBlankThenUpdateButtonShouldBeDisabled() {

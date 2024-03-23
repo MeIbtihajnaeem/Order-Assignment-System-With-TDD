@@ -97,9 +97,30 @@ public class CustomerOrder {
 				+ ", orderStatus=" + orderStatus + "]";
 	}
 
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(orderId);
+//	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		CustomerOrder other = (CustomerOrder) obj;
+//		return Objects.equals(orderId, other.orderId);
+//	}
+
+	public void setWorker(Worker worker) {
+		this.worker = worker;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(orderId);
+		return Objects.hash(category, orderDescription, orderId, orderStatus, worker);
 	}
 
 	@Override
@@ -111,7 +132,9 @@ public class CustomerOrder {
 		if (getClass() != obj.getClass())
 			return false;
 		CustomerOrder other = (CustomerOrder) obj;
-		return Objects.equals(orderId, other.orderId);
+		return category == other.category && Objects.equals(orderDescription, other.orderDescription)
+				&& Objects.equals(orderId, other.orderId) && orderStatus == other.orderStatus
+				&& Objects.equals(worker, other.worker);
 	}
 
 }

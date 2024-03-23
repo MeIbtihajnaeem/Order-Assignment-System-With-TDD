@@ -380,7 +380,7 @@ public class OrderSwingView extends JFrame implements OrderView {
 	public void orderModified(CustomerOrder order) {
 		for (int i = 0; i < defaultOrders.getSize(); i++) {
 			if (defaultOrders.getElementAt(i).getOrderId() == order.getOrderId()) {
-				defaultOrders.removeElement(order);
+				defaultOrders.removeElementAt(i);
 				defaultOrders.addElement(order);
 				resetErrorLabel();
 			}
