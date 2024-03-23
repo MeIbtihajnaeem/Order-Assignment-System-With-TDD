@@ -97,6 +97,8 @@
 						<excludedClasses>
 							<param>
 								com.example.orderAssignmentSystem.repository.postgresql.**</param>
+							<param>
+								com.example.orderAssignmentSystem.repository.view.swing.**</param>
 						</excludedClasses>
 						<excludedTestClasses>
 							<param>
@@ -136,6 +138,8 @@
 							<exclude>
 								com/example/orderAssignmentSystem/repository/postgresql/**</exclude>
 							<exclude>com/example/orderAssignmentSystem/model/**</exclude>
+							<exclude>
+								com/example/orderAssignmentSystem/view/swing/**</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
