@@ -12,7 +12,7 @@ jobs:
         os: [macos-latest, windows-latest]
         include:
         - java: 8
-          additional-maven-args: "-Pmutation-testing-with-coverage -DrepoToken=$COVERALLS_REPO_TOKEN coveralls:report"
+          additional-maven-args: "-Pmutation-testing-with-coverage-with-macos-windows"
     name: Build with Java ${{ matrix.java }}  on  ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
