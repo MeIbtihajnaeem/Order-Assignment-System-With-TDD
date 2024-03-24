@@ -41,7 +41,7 @@ public class OrderController {
 		orderView.showAllOrders(orderRepository.findAll());
 	}
 
-	public void createNewOrder(CustomerOrder order) {
+	public synchronized void createNewOrder(CustomerOrder order) {
 		LOGGER.info("Creating a new order");
 //		 _createMethodInputValidator(order);
 
